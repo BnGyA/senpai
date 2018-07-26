@@ -63,3 +63,62 @@ NOT (!)
 | ------------- |:-------------:| -----:|
 | **TRUE**      | `TRUE`        |`TRUE` |
 | **FALSE**     | `TRUE`        |`FALSE`|
+
+
+### The ternary Operator
+
+```javascript
+var name = 'Ben';
+var age = '18';
+
+age >= 18 ? console.log('he can drink beer') : console.log("he can't drink alcool");
+
+equivalent :
+
+if(age>=18){
+    console.log('he can drink beer')
+} else {
+    console.log("he can't drink alcool");
+}
+```
+
+
+### Switch Statement
+
+```javascript
+var job = 'teacher';
+
+switch(job){
+    case 'teacher':
+        console.log("he's a teacher");
+        break;
+    case 'drivers':
+        console.log("he's a driver");
+        break;
+    default:
+        console.log('he does something else');
+}
+```
+
+break is used to stop the execution if the case match the condition (faster code).
+
+### Truthy and Falsy value and equality operators
+
+Falsy:  value considered false when evaluated inside an if/else statement condition
+
+Falsy values : undefined, null, 0, '', NaN
+Truthy values : !falthy values
+
+```javascript
+var height;
+
+//height = 24;
+
+if(height){
+    console.log("Variable is defined");
+} else {
+    console.log("Variable has NOT been defined");
+}
+```
+
+This is an handy way to check if a var is defined or not !
