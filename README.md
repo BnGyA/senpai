@@ -102,7 +102,7 @@ switch(job){
 
 break is used to stop the execution if the case match the condition (faster code).
 
-### Truthy and Falsy value and equality operators
+### Truthy and Falsy value
 
 Falsy:  value considered false when evaluated inside an if/else statement condition
 
@@ -114,11 +114,137 @@ var height;
 
 //height = 24;
 
-if(height){
+if(height || height == 0){
     console.log("Variable is defined");
 } else {
     console.log("Variable has NOT been defined");
 }
 ```
 
-This is an handy way to check if a var is defined or not !
+This is an handy way to check if a var is defined or not.
+You've to check if = 0 because 0 is also a falsy!
+
+
+### Equality operators
+
+23 == '23' -> true because JavaScript does type coercion
+23 === '23' -> false because of the strict equality operator
+
+
+### Functions
+
+*Functions are one of the fundamental building blocks in JavaScript. A function is a JavaScript procedure—a set of statements that performs a task or calculates a value. To use a function, you must define it somewhere in the scope from which you wish to call it.*
+
+
+```javascript
+function calcAge(birthYear){
+    return 2018 - birthYear;
+}
+
+calcAge(1992);
+```
+
+### Functions statements & functions expressions
+function statement:
+
+```javascript
+function whatDoYouDo(job, firstName){
+
+}
+```
+function expression:
+```javascript
+var whatDoYouDo = function(job, firstName){
+
+}
+```
+
+Function declarations load before any code is executed.
+Function expressions load only when the interpreter reaches that line of code and always produce a result.
+
+So if you try to call a function expression before it's loaded, you'll get an error! If you call a function declaration instead, it'll always work, because no code can be called until all declarations are loaded.
+
+Example: Function Expression
+```
+alert(foo()); // ERROR! foo wasn't loaded yet
+var foo = function() { return 5; }
+```
+Example: Function Declaration
+```
+alert(foo()); // Alerts 5. Declarations are loaded before any code can run.
+function foo() { return 5; }
+```
+
+
+### Arrays
+```
+var names = ['John', 'Mark', 'Jane']; //most used syntax
+var years = new Array(1990, 1969, 1948);
+
+var yo = ['John', '1990', false];
+
+console.log(names[0]); // -> 'John'
+```
+
+Arrays are 0 based.
+You can put different data types inside the same array
+
+#### Arrays' methods
+
+```javascript
+
+var test = [];
+
+test.push('blue'); //- add to the end
+test.unshift('yo'); //- add to the beginning
+
+test.pop(); //- delete the last item
+test.shift(); //- delete the last item
+test.indexOf(1990); //- gives the index of an element
+
+```
+
+
+### Objects and properties
+
+
+```javascript
+
+var obj = {
+    firstName: 'Benjamin',
+    lastName: 'Rochez'
+}
+
+console.log(obj.firstName);
+
+obj.job = 'developer';
+
+console.log(obj); // job will be added as a property
+```
+
+firstName is a key, a property of the object obj.
+
+
+### Objects and Methods
+```javascript
+
+var obj = {
+    firstName: 'Benjamin',
+    lastName: 'Rochez',
+    birthYear: 1992,
+    calcAge: function(){
+        return 2018 - this.birthYear;
+    }
+}
+
+console.log(obj.calcAge());
+
+obj.age = obj.calcAge();
+```
+
+
+this means the current object
+
+
+
+
