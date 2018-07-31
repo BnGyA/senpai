@@ -1,0 +1,41 @@
+Arguments: 
+  /usr/local/bin/node /Users/benjaminrochez/.yarn/bin/yarn.js add babel-preset-react@6.24.1 babel-present-env@1.5.2
+
+PATH: 
+  /Users/benjaminrochez/.venvburrito/bin:/Users/benjaminrochez/.yarn/bin:/Applications/MAMP/bin/php/php5.5.38/bin:/Applications/Postgres.app/Contents/Versions/9.6/bin:/Users/benjaminrochez/.pyenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Postgres.app/Contents/Versions/latest/bin
+
+Yarn version: 
+  0.27.5
+
+Node version: 
+  8.11.3
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "indecision",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://registry.yarnpkg.com/babel-present-env: Not found
+      at Request.params.callback [as _callback] (/Users/benjaminrochez/.yarn/lib/yarn-cli.js:58200:18)
+      at Request.self.callback (/Users/benjaminrochez/.yarn/lib/yarn-cli.js:114242:22)
+      at emitTwo (events.js:126:13)
+      at Request.emit (events.js:214:7)
+      at Request.<anonymous> (/Users/benjaminrochez/.yarn/lib/yarn-cli.js:115225:10)
+      at emitOne (events.js:116:13)
+      at Request.emit (events.js:211:7)
+      at IncomingMessage.<anonymous> (/Users/benjaminrochez/.yarn/lib/yarn-cli.js:115145:12)
+      at Object.onceWrapper (events.js:313:30)
+      at emitNone (events.js:111:20)
