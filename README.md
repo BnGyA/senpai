@@ -27,6 +27,12 @@ Javascript has dynamic typing: data types are automatically assigned to variable
 Type coercion :
 console.log(firstname + ' ' + age);
 
+Type coercion means that when the operands of an operator are different types, one of them will be converted to an "equivalent" value of the other operand's type. For instance, if you do:
+
+"benjamin" + 10 -> "benjamin" + "10" -> "benjamin10". The 10 is converted to a number
+10 + false = 10 + 0 = 10
+10 + true = 10 + 1 = 11
+
 var mutation : var type can be changed
 var age = 28
 age = 'twenty eight'
@@ -243,8 +249,43 @@ obj.age = obj.calcAge();
 ```
 
 
-this means the current object
+this means the current object.
+
+### Loops & iteration
+
+For loop
+```
+for (var i=0; i<10; i++){
+    console.log(i);
+}
 
 
+var john = ['Ben', 'Madison', 1990];
+
+for (var i=0; i<john.length; i+){
+    console.log(john[i]);
+}
+```
+
+While loop
+```
+var i = 0;
+
+while(i<john.length){
+    console.log(john[i]);
+    i++;
+}
+```
+
+Continue & break statements
+```
+var john = ['John', 'Smith', 1900, false];
+
+for (var i = 0; i<john.length; i++){
+    if (typeof john[i] !== 'string') continue;
+    //if (typeof john[i] !== 'string') break;
+}
+```
 
 
+## How JavaScript works behind the scene

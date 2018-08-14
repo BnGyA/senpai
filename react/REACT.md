@@ -204,3 +204,288 @@ const getFirstName = (fullname) => fullname.split(' ')[0];
 console.log(getFirstName('Benjamin Rochez'));
 ```
 
+#### Argument object
+
+No longer bound with arrow function
+
+```
+var add = function (a, b){
+    console.log(arguments);
+    return a+b;
+};
+
+console.log(add(55, 1, 1001)); // would work and arguments would be displayed
+
+// but in ES6
+
+const add = (a,b) => {
+    console.log(arguments);
+    return a+b;
+}
+
+// an error is thrown
+
+```
+
+#### This
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+        console.log(this.name);
+
+
+        this.cities.forEach(function (city) {
+            console.log(this.name + ' has lived in' + city);
+        });
+    }
+};
+
+user.printPlacesLived();
+```
+That would throw an error because this.name isnt accessible inside this.cities.forEach function.
+Here's a workaround, by defining a const that equal to this.
+
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+        console.log(this.name);
+        const that = this;
+
+        this.cities.forEach(function (city) {
+            console.log(that.name + ' has lived in' + city);
+        });
+    }
+};
+
+user.printPlacesLived();
+```
+
+but if we use an arrow function, it would work because with arrow function, the function use the this of the context they have been created in
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+        console.log(this.name);
+
+        this.cities.forEach( (city) => {
+            console.log(this.name + ' has lived in' + city);
+        });
+    }
+};
+
+user.printPlacesLived();
+```
+
+Sometimes you don't want to use the arrow function; for exemple for the prinPlacesLived. Where ? For a method for exemple. Why ? Because, if you do, the printPlacesLived, it wont bind its own value so its no longer equal to the object. It goes up to the parent scope, which in this case is undefined.
+
+So here, we can use ES5 function to use the this binded to cities, and then the foreach an ES6 arrow function to bind it to the parent's scope which is the same.
+
+`BUT !`
+There's a new ESX method definition syntax and it allows us to clean this up a little bit
+
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived() {
+        console.log(this.name);
+
+        this.cities.forEach( (city) => {
+            console.log(this.name + ' has lived in' + city);
+        });
+    }
+};
+
+user.printPlacesLived();
+```
+
+this looks weird but `printPlaceLived(){};` in ES6 = `printPlacesLived: function (){};`
+
+
+#### Map
+
+Map is an array method like forEach but it works a bit differently
+
+
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+
+        const cityMessages = this.cities.map((city) =>{
+            //return city + '!'; // each city will have a ! at the end.
+            return this.name + ' has lived in ' + city + '!';
+        });
+
+        return cityMessages;
+    }
+};
+
+console.log(user.printPlacesLived());
+```
+
+
+With map, you can transform each item and getting a new array back & that's really useful!
+
+
+This can be simplified to
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+
+        return this.cities.map((city) =>{
+            return this.name + ' has lived in ' + city + '!';
+        });
+
+
+    }
+};
+
+console.log(user.printPlacesLived());
+```
+
+because we dont need a const here to return a function, and then simplify more
+
+```
+const user = {
+    name: 'Andrew,
+    cities: ['Brussels', 'Mons', 'La louvière'],
+    printPlacesLived: function () {
+        return this.cities.map((city) => this.name + ' has lived in ' + city + '!' );
+    }
+};
+
+console.log(user.printPlacesLived());
+```
+because we're only returning something!
+
+
+### S03E16: Events and Attributes
+
+Attributes in JSX can be a little bit different, for example, id="test" is correct but class="class" won't work, instead we should use className="class"
+
+
+### S03E17: Manual data binding
+
+For now, we're going to re-render the page when we update the counter.
+
+```
+let count = 0;
+const addOne = ()  =>  {
+    count++;
+    renderCounterApp();
+};
+const minusOne = () => {
+    count--
+    renderCounterApp();
+};
+const reset = () => {
+    count = 0
+    renderCounterApp();
+};
+
+const renderCounterApp = () => {
+    const templateTwo = (
+        <div>
+            <h1>Count: {count}</h1>
+            <button onClick={addOne}>+1</button>
+            <button onClick={minusOne}>-1</button>
+            <button onClick={reset}>Reset</button>
+        </div>
+    );
+
+    ReactDOM.render(templateTwo, appRoot);
+};
+
+renderCounterApp();
+```
+
+That seems freaking weird to re-render the whole page even for a simple counter but actually React is really efficient behind the scene and will only re-render the things which are changing.
+To see this, you can open the developer panel at the element tab. The element who are re-rendered in the dom are going to 'flash'.
+`Even if we re-render the whole app in our code, React uses some virtual DOM to only render the changing elements`
+
+
+### S03E18 Forms & inputs
+There's a react handler for the onSubmit
+
+```
+const app = {
+    title: 'Indecision app',
+    subtitle: 'This is JSX from app.js',
+    options: ["One", "Two"]
+};
+
+
+const onFormSubmit = (e) => {
+    e.preventDefault();
+
+    const option = e.target.elements.option.value;
+
+    if(option){
+        app.options.push(option);
+        e.target.elements.option.value = '';
+    }
+    render();
+};
+
+
+const render = () =>{
+    const template = (
+        <div>
+            <h1>{app.title}</h1>
+            {app.subtitle && <p>{app.subtitle}</p>}
+            <p>{app.options.length > 0 ?  'Here are your options : '+ app.options : 'No options'}</p>
+
+            <form onSubmit={onFormSubmit}>
+                <input type="text" name='option' />
+                <button>Add option</button>
+            </form>
+        </div>
+    );
+    ReactDOM.render(template, appRoot);
+
+};
+
+render();
+```
+
+### S03E19: Arrays in JSX
+
+JSX supports string, numbers & arrays by default
+JSX doesnt supports objects & ignores booleans, null or undefined
+
+```
+{
+    [1, 2, 3] //- will render 123 on the screen
+}
+{
+    [<p></p>, <p></p>, <p></p>] //- will render 3 p but will throw an error because it needs a key for each element to be able to recognize those.
+    [<p key="1"></p>, <p key="2"></p>, <p key="3"></p>]
+}
+```
+
+```
+const numbers = [55, 101, 1000];
+
+const render = () => {
+    const template = (
+        <div>
+            <h1>{app.title}</h1>
+            {
+                numbers.map((number) => {
+                    return <p key={number}>Number: {number}</p>;
+                })
+            }
+        </div>
+    )
+}
+```
+
