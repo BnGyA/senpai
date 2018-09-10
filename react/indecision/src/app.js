@@ -1,115 +1,99 @@
-console.log('App.js is running! ');
-const appRoot = document.getElementById('app');
+class IndecisionApp extends React.Component {
+    render() {
 
-// JSX - Javascript XML
+        let title = 'IndecisionApp';
+        let subtitle = 'Put your life decision to a computer';
+        let options = ['Option 1', 'Option 2', 'Option 3'];
 
-const app = {
-    title: 'Indecision app',
-    subtitle: 'This is JSX from app.js',
-    options: []
-};
+        return (
 
-
-const onFormSubmit = (e) => {
-    e.preventDefault();
-
-    const option = e.target.elements.option.value;
-
-    if(option){
-        app.options.push(option);
-        e.target.elements.option.value = '';
+            <div>
+                <Header title={title} subtitle={subtitle}/>
+                <Options options={options}/>
+                <AddOption />
+                <Action />
+            </div>
+        );
     }
-    render();
-};
+}
+
+class Header extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>{this.props.title}</h1>
+                <h2>{this.props.subtitle}</h2>
+            </div>
+        )
+    }
+}
+
+class Action extends React.Component {
+    handlePick(){
+        alert('something');
+    }
+    render(){
+        return (
+            <div>
+                <button onClick={this.handlePick}>What should I do ?</button>
+            </div>
+        )
+    }
+}
 
 
-// Remove all button
+class Options extends React.Component{
+    handleRemove(){
+        console.log(this.props.options);
+    }
+    render(){
+        return (
+            <div>
+                <ul>
+                    {
+                        this.props.options.map((option) => <Option key={option} optionText={option}/>)
+                    }
+                </ul>
+                <button onClick={this.handleRemove.bind(this)}>Remove all options</button>
+            </div>
+        )
+    }
+}
 
-const resetForm = () => {
-    app.options = [];
-    render();
-};
 
-// Make decision
-
-const makeDecision = () => {
-    let answer = app.options[Math.floor(Math.random() * app.options.length)];
-    alert(answer);
-    render();
-};
-
-const render = () =>{
-    const template = (
-        <div>
-            <h1>{app.title}</h1>
-            {app.subtitle && <p>{app.subtitle}</p>}
-            {/*<p>{app.options.length > 0 ?  'Here are your options : '+ app.options : 'No options'}</p>*/}
-            <ul>
-                {
-                    app.options.map((option) => <li key={option}>{option}</li>)
-                }
-            </ul>
-            <form onSubmit={onFormSubmit}>
-                <input type="text" name='option' />
-                <button>Add option</button>
-            </form>
-            <button disabled={app.options.length === 0} onClick={makeDecision}>What Should I do ?</button>
-            <button onClick={resetForm}>Reset</button>
-        </div>
-    );
-    ReactDOM.render(template, appRoot);
-
-};
-
-render();
+class Option extends React.Component{
+    render(){
+        return (
+            <div>
+                <li>
+                    {this.props.optionText}
+                </li>
+            </div>
+        )
+    }
+}
 
 
 
-// Profil page
+class AddOption extends React.Component{
+    handleAddOption(e){
+        e.preventDefault();
 
-/*const user = {
-    name: 'Ben',
-    age: 26,
-    location: 'Belgium'
-};
+        const option = e.target.elements.option.value.trim();
 
-const templateTwo = (
-    <div>
-        <h1>{user.name}</h1>
-        <p>Age: {user.age}</p>
-        <p>Location: {user.location}</p>
-    </div>
-);*/
-
-
-/* COUNTER
-
-let count = 0;
-const addOne = ()  =>  {
-    count++;
-    renderCounterApp();
-};
-const minusOne = () => {
-    count--;
-    renderCounterApp();
-};
-const reset = () => {
-    count = 0;
-    renderCounterApp();
-};
-
-const renderCounterApp = () => {
-    const templateTwo = (
-  <div>
-      <h1>Count: {count}</h1>
-      <button onClick={addOne}>+1</button>
-      <button onClick={minusOne}>-1</button>
-      <button onClick={reset}>Reset</button>
-  </div>
-);
-
-
-    ReactDOM.render(templateTwo, appRoot);
-    renderCounterApp();
-};*/
-
+        if(option){
+            console.log(this.props.option);
+        }
+    }
+    render(){
+        return (
+            <div>
+                <form onSubmit={this.handleAddOption}>
+                    <input type="text" name='option' />
+                    <button>Add option</button>
+                </form>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<IndecisionApp/>, document.getElementById('app'));
