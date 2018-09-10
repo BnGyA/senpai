@@ -781,7 +781,7 @@ class Options extends React.Component{
     }
 }
 ```
-That's better for performance wise to make it into the constructor because constructor is called once the app is loaded.
+
 
 ### S04E31: Component state
 
