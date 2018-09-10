@@ -33,7 +33,7 @@ yarn add babel-preset-react@6.24.1 babel-preset-env@1.5.2
 babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch
 ```
 
-
+## Section 3: Hello React
 ### JSX
 
 
@@ -489,3 +489,270 @@ const render = () => {
 }
 ```
 
+
+## Section 4 : React Components
+
+![Alt text](indecision/public/assets/components.png?raw=true "Title")
+
+
+### S04E24-25: ES6 classes
+
+Classes are like blueprints
+
+```
+class Person {
+    constructor(name = 'Anonymous', location = 'Somewhere'){
+        this.name = name;
+        this.location = location;
+    }
+
+    getLocation() {
+        //return 'Location : ' + this.location;
+        // in es6
+        `Location : ${this.location}`;
+    }
+}
+const me = new Person('Benjamin Rochez', 'Belgium');
+const anon = new Person();
+console.log(me.getLocation);
+console.log(anon.getLocation);
+```
+
+We have to define a constructor function to access the Person() arguments
+
+
+Imagine having a class who would be a child of another, it would take the same parameters & methods
+
+```
+class Student extends Person{
+    contructor(name, location, age){
+        super(name, location);
+        this.age = age;
+    }
+
+    getLocation(){
+        let location = super.getLocation();
+        return location; // will return the parent location method :)
+    }
+}
+
+const student = new Student('Mica', 'Belgium', 26);
+```
+super(); will "import" the parameters of the parent class
+When you're extending a class you don't have to redefine the default values
+
+`Note`
+
+```
+!undefined -> true
+!!undefined -> false
+
+hasMajor(){
+    return !!this.major;
+}
+
+// this function will return true if he has major defined, false if not;
+```
+
+
+### S04E26: Create a React component
+To create a React component, we need to extend the React class & use the render method.
+
+```
+class Header extends React.Component{
+    render() {
+        return <p>This is from Header</p>
+    }
+}
+
+const jsx = (
+    <div>
+        <h1>Title</h1>
+        <Header />
+    </div>
+);
+
+ReactDOM.render(jsx, document.getElementById('app'));
+
+```
+
+### S04E27: Nesting components
+
+```
+class Root extends React.Component{
+    render(){
+        return(
+            <div>
+                <Header />
+                <Actions />
+            </div>
+
+        )
+    }
+}
+
+
+ReactDOM.render(<Root />, document.getElementById('app'));
+```
+
+### S04E28: Components props
+
+```
+<Header title="Title goes here" />
+
+class Header extends React.Component{
+    render() {
+        return(
+            <div>
+                <h1>{this.props.title}</h1>
+            </div>
+        );
+    }
+}
+
+```
+
+Better organized as follow
+```
+let title = "Here goes the title";
+let subtitle = "Here goes the subtitle";
+<Header title={title} subtitle={subtitle} />
+
+class Header extends React.Component{
+    render() {
+        return(
+            <div>
+                <h1>{this.props.title}</h1>
+            </div>
+        );
+    }
+}
+
+```
+
+Complex organisation below:
+```
+class IndecisionApp extends React.Component {
+    render() {
+
+        let title = 'IndecisionApp';
+        let subtitle = 'Put your life decision to a computer';
+        let options = ['Option 1', 'Option 2', 'Option 3'];
+
+        return (
+
+            <div>
+                <Header title={title} subtitle={subtitle}/>
+                <Options options={options}/>
+                <AddOption />
+                <Action />
+            </div>
+        );
+    }
+}
+class Options extends React.Component{
+    render(){
+        return (
+            <div>
+                <p>Here are the options</p>
+                <Option options={this.props.options}/>
+            </div>
+        )
+    }
+}
+
+class Option extends React.Component{
+    render(){
+        return (
+            <div>
+                 <ul>
+                {
+                    this.props.options.map((option) => <li key={option}>{option}</li>)
+                }
+                </ul>
+            </div>
+        )
+    }
+}
+```
+
+
+Even better
+
+```
+
+class Options extends React.Component{
+    render(){
+        return (
+            <div>
+                <ul>
+                    {
+                        this.props.options.map((option) => <Option key={option} optionText={option}/>)
+                    }
+                </ul>
+            </div>
+        )
+    }
+}
+
+
+class Option extends React.Component{
+    render(){
+        return (
+            <div>
+                <li>
+                    {this.props.optionText}
+                </li>
+            </div>
+        )
+    }
+}
+```
+
+
+### S04E29: Event handler
+
+```
+class Action extends React.Component {
+    handlePick(){
+            alert('something');
+    }
+    render(){
+        return (
+            <div>
+                <button onClick={this.handlePick}>What should I do ?</button>
+            </div>
+        )
+    }
+}
+```
+
+
+### S04E30: Method binding
+
+```
+
+const obj = {
+    name: 'benjamin',
+    getName(){
+        return this.name;
+    }
+};
+
+const getName = obj.getName;
+console.log(obj.getName());
+console.log(getName);
+```
+
+The first console.log would work because of the context of the object, but we are loosing this context into the second console.log;
+
+
+```
+const getName = obj.getName.bind(obj);
+console.log(getName);
+
+const getOtherName = obj.getName.bind({name: 'Andrew'});
+console.log(getOtherName);
+```
+
+The `bind` method will transfer the context. Actually the parameter of bind() can be anything and will be as if it was the `this`;
