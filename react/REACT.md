@@ -756,3 +756,35 @@ console.log(getOtherName);
 ```
 
 The `bind` method will transfer the context. Actually the parameter of bind() can be anything and will be as if it was the `this`;
+Interesting link : `https://medium.freecodecamp.org/this-is-why-we-need-to-bind-event-handlers-in-class-components-in-react-f7ea1a6f93eb`
+
+```
+class Options extends React.Component{
+    constructor(props){
+        super(props);
+        this.handleRemoveAll = this.handleRemoveAll.bind(this);
+    }
+    handleRemoveAll(){
+        console.log(this.props.options)
+    }
+    render(){
+        return (
+            <div>
+                <ul>
+                    {
+                        this.props.options.map((option) => <Option key={option} optionText={option}/>)
+                    }
+                </ul>
+                <button onClick={this.handleRemoveAll}>Remove all options</button>
+            </div>
+        )
+    }
+}
+```
+That's better for performance wise to make it into the constructor because constructor is called once the app is loaded.
+
+### S04E31: Component state
+
+`MOST CONFUSING PART`
+
+![Alt text](indecision/public/assets/component_state.png?raw=true "Title")
