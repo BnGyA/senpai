@@ -826,3 +826,65 @@ this.setState({}
     count: 0
 );
 ```
+
+We're using state because props only have a one way communication and we need child to be able to talk to the parents.
+
+### S04E36-37
+
+Validation :
+```
+//Into the RootApp
+
+handleAddOption(option){
+    if(!option){
+        return 'Enter a valid value to add item';
+
+        //else if indexOf > -1 will trigger if already exists
+    } else if (this.state.options.indexOf(option) > -1){
+        return 'This option already exists';
+    }
+    this.setState((prevState)=>{
+        //options: prevState.options.push(this.props.option) -> not correct because we are manipulating the prevState and we don't want to do such a thing
+       return{
+           options: prevState.options.concat(option)
+       }
+    });
+}
+
+
+
+// Into AddOption component
+
+constructor(props){
+    super(props);
+    this.handleAddOption = this.handleAddOption.bind(this);
+    this.state = {
+        error: undefined
+    }
+}
+
+// we're keeping the main logic here in the Addoption and using the handleAddOption from the parent in the child function
+handleAddOption(e){
+    e.preventDefault();
+    const option = e.target.elements.option.value.trim();
+    const error = this.props.handleAddOption(option);
+
+    this.setState(() => {
+        return {
+            //error: error in ES6 you can only put error
+            error
+        };
+    });
+}
+
+
+// Into the render AddOption component
+{this.state.error && <p>{this.state.error}</p>}
+```
+
+### S04E38 :
+
+![Alt text](indecision/public/assets/props_vs_state.png?raw=true "Title")
+
+
+
