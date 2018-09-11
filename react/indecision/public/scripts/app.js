@@ -8,34 +8,64 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Counter = function (_React$Component) {
-    _inherits(Counter, _React$Component);
+/*const appRoot = document.getElementById('app');
 
-    function Counter(props) {
-        _classCallCheck(this, Counter);
+const app = {
+    title: 'Build it visible'
+};
 
-        var _this = _possibleConstructorReturn(this, (Counter.__proto__ || Object.getPrototypeOf(Counter)).call(this, props));
+let spoiler = false;
 
-        _this.handleAddOne = _this.handleAddOne.bind(_this);
-        _this.handleMinusOne = _this.handleMinusOne.bind(_this);
-        _this.handleReset = _this.handleReset.bind(_this);
+const spoil = () => {
+    spoiler = !spoiler;
+    console.log(spoiler);
+    render();
+};
+
+const render = () => {
+
+    const template = (
+      <div>
+          <h1>{app.title}</h1>
+          <button onClick={spoil}>{spoiler ? 'Hide' : 'Show'} details</button>
+          //{<p>{spoiler ? 'Here are some details blahblah' : '' }</p>}
+          {spoiler && (
+              <p>Here are some spoil</p>
+          )}
+      </div>
+    );
+
+    ReactDOM.render(template, appRoot);
+};
+
+render();
+
+*/
+
+var Spoil = function (_React$Component) {
+    _inherits(Spoil, _React$Component);
+
+    function Spoil(props) {
+        _classCallCheck(this, Spoil);
+
+        var _this = _possibleConstructorReturn(this, (Spoil.__proto__ || Object.getPrototypeOf(Spoil)).call(this, props));
+
+        _this.spoil = _this.spoil.bind(_this);
+        _this.state = {
+            spoiler: false
+        };
         return _this;
     }
 
-    _createClass(Counter, [{
-        key: 'handleAddOne',
-        value: function handleAddOne() {
-            console.log('add one');
-        }
-    }, {
-        key: 'handleMinusOne',
-        value: function handleMinusOne() {
-            console.log('minus one');
-        }
-    }, {
-        key: 'handleReset',
-        value: function handleReset() {
-            console.log('reset');
+    _createClass(Spoil, [{
+        key: 'spoil',
+        value: function spoil() {
+            this.setState(function (prevState) {
+                return {
+                    spoiler: !prevState.spoiler
+                };
+            });
+            console.log(this.state);
         }
     }, {
         key: 'render',
@@ -46,59 +76,23 @@ var Counter = function (_React$Component) {
                 React.createElement(
                     'h1',
                     null,
-                    'Count: '
+                    'Build it visible'
                 ),
                 React.createElement(
                     'button',
-                    { onClick: this.handleAddOne },
-                    '+1'
+                    { onClick: this.spoil },
+                    this.state.spoiler ? 'Hide' : 'Show'
                 ),
-                React.createElement(
-                    'button',
-                    { onClick: this.handleMinusOne },
-                    '-1'
-                ),
-                React.createElement(
-                    'button',
-                    { onClick: this.handleReset },
-                    'reset'
+                this.state.spoiler && React.createElement(
+                    'p',
+                    null,
+                    'Here are some spoil'
                 )
             );
         }
     }]);
 
-    return Counter;
+    return Spoil;
 }(React.Component);
 
-ReactDOM.render(React.createElement(Counter, null), document.getElementById('app'));
-
-/* COUNTER
-
-let count = 0;
-const addOne = ()  =>  {
-    count++;
-    renderCounterApp();
-};
-const minusOne = () => {
-    count--;
-    renderCounterApp();
-};
-const reset = () => {
-    count = 0;
-    renderCounterApp();
-};
-
-const renderCounterApp = () => {
-    const templateTwo = (
-  <div>
-      <h1>Count: {count}</h1>
-      <button onClick={addOne}>+1</button>
-      <button onClick={minusOne}>-1</button>
-      <button onClick={reset}>Reset</button>
-  </div>
-);
-
-
-    ReactDOM.render(templateTwo, appRoot);
-    renderCounterApp();
-};*/
+ReactDOM.render(React.createElement(Spoil, null), document.getElementById('app'));

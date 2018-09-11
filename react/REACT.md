@@ -789,4 +789,40 @@ That's better for performance wise to make it into the constructor because const
 
 ![Alt text](indecision/public/assets/component_state.png?raw=true "Title")
 
+Step 1 : Add the initial state to the constructor
 
+```
+this.state = {
+  count: 0
+};
+```
+
+Step 2 : Render with the default value by adding on the right place
+
+```
+<h1>Count: {this.state.count}</h1>
+```
+
+Step 3: Change the state based on event
+
+```
+handleAddOne(){
+    this.setState((prevState) => {
+        return{
+            count: prevState.count + 1
+        }
+    });
+}
+```
+
+Even if we define multiple state objects, we don't need to define each of those in the setState as only the updated one will be re-rendered.
+
+### S04E34: Alternative setState Syntax
+
+There's an older way to do that but `it's not recommended`
+
+```
+this.setState({}
+    count: 0
+);
+```
