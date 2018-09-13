@@ -151,3 +151,130 @@ class Car:
     def age(self):
         return 2018 - self.year
 ```
+
+
+### S03E13: Install Django
+
+```
+pip3 install django==1.11.10
+```
+
+to check if correctly installed
+
+```
+python3
+import django
+print(django.get_version())
+```
+
+### S03E14-15: Creating a project
+
+```
+django-admin startproject nameoftheproject
+```
+
+To start a project :
+```
+python3 manage.py runserver
+```
+
+
+### S03E16: URLs
+
+Urls.py
+```
+from django.conf.urls import url
+from django.contrib import admin
+from . import views
+
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^hello/', views.hello),
+]
+```
+Views.py
+```
+from django.http import HttpResponse
+
+def hello(request):
+    return HttpResponse("Hello World!")
+```
+
+
+### S03E17: Django & HTML
+
+In order to create html templates we should specify it into the settings.py at the TEMPLATES.DIRS
+The views.py should be updated to
+
+```
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def hello(request):
+    return render(request, 'index.html')
+```
+
+
+### S03E19: Sending data
+
+```
+<form action="{‰ url 'translate' ‰}">
+```
+
+We give a name of translate to the urls.py for the translate redirection and specify it into the action of the form
+
+
+### S03E20: Ping latin translator
+
+views.py
+```
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def index(request):
+    return render(request, 'index.html')
+
+def translate(request):
+    toTranslate = request.GET['to_translate'].lower()
+
+
+    translation = ''
+    for word in toTranslate.split():
+        # check if first letter is a vowel
+        if word[0] in ['a', 'e', 'i', 'o', 'u']:
+            translation += word
+            translation += 'yay '
+        # else it's a consonant
+        else:
+            # take the rest of the word till the end
+            translation += word[1:]
+            # take the first letter
+            translation += word[0]
+            # add the ay at the end
+            translation += 'ay '
+    return HttpResponse(translation)
+    #return render(request, 'translate.html')
+```
+
+
+### S03E21: View Dictionary
+
+In order to pass infos to the view, we have to create a dictionary
+
+```
+return render(request, 'translate.html', {'original': toTranslate, 'translation': translation})
+```
+And add those keys to the html
+```
+<p>{{original}}</p>
+```
+
+### S04E29: VirtualEnv
+
+Create a new virtual env
+
+```
+mkvirtualenv name
+```
+
