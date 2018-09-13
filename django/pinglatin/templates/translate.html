@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<hmtl>
+    <head>
+        <title>Translated</title>
+    </head>
+
+    <body>
+        <h1>Pig latin translator!</h1>
+        <h3>Original</h3>
+        <p>{{original}}</p>
+        <h3>Translated</h3>
+        <p>{{translation}}</p>
+
+        <h3>New translation</h3>
+         <form action="{% url 'translate' %}">
+            <input type="text" name="to_translate" placeholder="Text to translate">
+            <input type="submit" value="Translate">
+        </form>
+        <a href="{% url 'index' %}">Back to the index</a>
+    </body>
+</hmtl>

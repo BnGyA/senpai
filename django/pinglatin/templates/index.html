@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<hmtl>
+    <head>
+        <title>Ping latin translator</title>
+    </head>
+
+    <body>
+        <h1>Pig latin translator!</h1>
+        <form action="{% url 'translate' %}">
+            <input type="text" name="to_translate" placeholder="Text to translate">
+            <input type="submit" value="Translate">
+        </form>
+    </body>
+</hmtl>
