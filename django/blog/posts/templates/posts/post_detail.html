@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<hmtl>
+    <head>
+        <title>Blog</title>
+    </head>
+
+    <body>
+        <h1>{{post.title}}</h1>
+        <p>{{post.pub_date_pretty}}</p>
+        <p>{{post.summary}}</p>
+        <img src="{{post.image.url}}" alt="{{post.title}}">
+        <p><a href="{% url 'home' %}">Back to home</a></p>
+    </body>
+</hmtl>

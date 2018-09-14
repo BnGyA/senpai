@@ -5,6 +5,20 @@
     </head>
 
     <body>
-        <h1>Blog</h1>
+    <h1>Blog</h1>
+
+     <a href="{% url 'about' %}">About page</a>
+
+    {% load static %}
+    <img src="{% static 'posts/home.jpeg' %}" alt="">
+    
+    {% for post in posts.all %}
+    <div style="margin-bottom: 50px">
+        <a href="{% url 'post_details' post.id %}">{{post.title}}</a>
+        <p>{{post.pub_date_pretty}}</p>
+        <p>{{post.summary}}</p>
+        <img src="{{post.image.url}}" alt="" style="max-width: 500px">
+    </div>
+    {% endfor %}
     </body>
 </hmtl>
