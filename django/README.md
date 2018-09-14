@@ -276,5 +276,79 @@ Create a new virtual env
 
 ```
 mkvirtualenv name
+easy-intall --upgrade pip
+pip install django
 ```
 
+
+### S04E30: Apps
+
+Part of the website/app
+
+```
+python3 manage.py startapp posts
+```
+
+### S04E31: App views
+
+In order to correctly set-up a view. The new app should be at the root level
+
+![Alt text](apps_tree.png?raw=true "Title")
+
+Then you should had it to the `blog>settings.py` as an INSTALLED_APPS
+
+Then create a templates folder containing the posts/templates.html
+
+`NOTE:` That's better to create a folder which has the same name as the app he belongs to inside the templates folder than directly create the html inside this templates folder.
+
+Into the `blog>urls.py` you can now specify the route
+
+```
+from django.conf.urls import url
+from django.contrib import admin
+from posts import views
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^$', views.index)
+]
+```
+
+And define the `posts/views`.py
+
+```
+from django.shortcuts import render
+
+# Create your views here.
+def index(request):
+    return render(request, 'posts/index.html')
+```
+
+### S04E32: Models
+
+(https://docs.djangoproject.com/fr/2.1/topics/db/models/)
+The models are stored into the database
+
+You can find the models fields here : https://docs.djangoproject.com/en/2.1/ref/models/fields/
+
+Some examples :
+CharField, BooleanField, ..
+
+Create those into the models.py in the right app
+
+```
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=250)
+    pub_date = models.DateTimeField()
+    image = models.ImageField(upload_to='media/')
+    body = models.TextField()
+```
+
+In order to add those models to our database we need to make a migration with those changes
+
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
