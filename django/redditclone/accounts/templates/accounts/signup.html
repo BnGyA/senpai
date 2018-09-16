@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup page</title>
+</head>
+
+<body>
+<h1>Signup page</h1>
+{% if error %}
+{{error}}
+{% endif %}
+<form method="POST" action="{% url 'signup' %}">
+     {% csrf_token %}
+    <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" placeholder="username">
+    </div>
+    <div>
+        <label for="password_1">Password</label>
+        <input type="password" name="password_1" id="password_1" placeholder="password">
+    </div>
+    <div>
+        <label for="password_2">Confirm the password</label>
+        <input type="password" name="password_2" id="password_2" placeholder="password">
+    </div>
+    <button>Signup</button>
+</form>
+</body>
+</html>
