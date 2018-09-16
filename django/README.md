@@ -742,3 +742,94 @@ Create a new record  in the DNS section
 Then modify the /etc/nginx/sites-available/blog and add the domain to this line :
 
 `server_name 95.179.156.210 customdomain.com;` and also add it to the ALLOWED_HOST in the config
+
+
+## SO6 : Reddit clone
+### S06E61: Signup form
+
+We're going to create a separated app for the account stuff (login & signup)
+
+```
+python manage.py startapp name
+```
+
+
+When we're using POST we need to add the CSRF token
+
+```
+ {% csrf_token %}
+```
+
+we now should update the signup view
+
+```
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.shortcuts import render
+
+# Create your views here.
+def signup(request):
+    if request.method == "POST":
+        print('The post worked')
+    else:
+        return render(request, 'accounts/signup.html')
+```
+
+
+(https://docs.djangoproject.com/fr/1.11/topics/auth/)
+
+### S06E63: Working with users
+
+
+`accounts/views.py`
+```
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.shortcuts import render
+from django.contrib.auth.models import User
+
+
+# Create your views here.
+def signup(request):
+    if request.method == "POST":
+        if request.POST['password_1'] == request.POST['password_2']:
+            user = User.objects.create_user(request.POST['username'], password=request.POST['password_1'])
+            return render(request, 'accounts/signup.html')
+        else:
+            return render(request, 'accounts/signup.html', {'error' : "Passwords didnt match"})
+    else:
+        return render(request, 'accounts/signup.html')
+
+```
+
+To pass the error to the view :
+
+`signup.html`
+```
+{% if error %}
+{{error}}
+{% endif %}
+```
+
+`Username uniqueness` + automatic login
+```
+# Create your views here.
+def signup(request):
+    if request.method == "POST":
+        if request.POST['password_1'] == request.POST['password_2']:
+            try:
+                user = User.objects.get(username = request.POST['username'])
+                return render(request, 'accounts/signup.html', {'error': "Username already taken"})
+            except User.DoesNotExist:
+                user = User.objects.create_user(request.POST['username'], password=request.POST['password_1'])
+
+                # this part will automatically login the new created user
+                login(request, user)
+                return render(request, 'accounts/signup.html')
+        else:
+            return render(request, 'accounts/signup.html', {'error' : "Passwords didnt match"})
+    else:
+        return render(request, 'accounts/signup.html')
+```
