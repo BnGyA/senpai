@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redditclone</title>
+</head>
+
+<body>
+<a href="{% url 'home' %}">Reddit Clone</a>
+{% if user.is_authenticated %}
+    <a href="#" onClick="document.getElementById('logout').submit()">Logout</a>
+    <form id="logout" method="POST" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+    </form>
+{% else %}
+    <a href="{% url 'accounts:login' %}">Login</a>
+    <a href="{% url 'accounts:signup' %}">Signup</a>
+{% endif %}
+
+{% block content %}
+{% endblock %}
+
+
+Footer
+</body>
+</html>
+

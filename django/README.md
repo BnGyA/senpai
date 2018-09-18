@@ -833,3 +833,297 @@ def signup(request):
     else:
         return render(request, 'accounts/signup.html')
 ```
+
+`login view`
+```
+def loginview(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return render(request, 'accounts/login.html', {'error': "Login successful"})
+        else:
+            return render(request, 'accounts/login.html', {'error': "Passwords & Username didnt match"})
+    else:
+        return render(request, 'accounts/login.html')
+```
+
+
+
+### S06E66: Url Include
+
+That's a better way to manage the urls in big apps
+
+
+`reddiclone/urls.py`
+```
+from django.conf.urls import url, include
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('accounts.urls')),
+]
+```
+
+`accounts/urls.py`
+```
+from django.conf.urls import url
+from . import views
+
+app_name = 'accounts'
+
+urlpatterns = [
+    url(r'^signup/', views.signup, name="signup"),
+    url(r'^login/', views.loginview, name="login"),
+]
+```
+
+`Into the html`
+`{% url 'accounts:signup' %}`
+
+
+`check if logged in`
+
+```
+from django.contrib.auth.decorators import login_required
+# Create your views here.
+
+@login_required
+def create(request):
+    return render(request, 'posts/create.html')
+```
+
+
+### S06E67: Next Redirect
+
+Once django redirects someone, at the end of the url there's the page they tried to access before and we can use this param
+
+Into the html :
+
+```
+{%if request.GET.next%}
+   <input type=hidden" value="{{ request.GET.next }}" name="text">
+{%endif%}
+```
+
+into the view
+```
+if user is not None:
+    login(request, user)
+    if 'next' in request.POST:
+        return redirect(request.POST['next'])
+    return render(request, 'accounts/login.html', {'error': "Login successful"})
+else:
+    return render(request, 'accounts/login.html', {'error': "Passwords & Username didnt match"})
+```
+
+### S06E69: Post model
+
+```
+from django.db import models
+from django.contrib.auth.models import User
+# Create your models here.
+
+class Posts(models.Model):
+    title = models.CharField(max_length=200)
+    url = models.TextField()
+    pub_date = models.DateTimeField()
+    author = models.ForeignKey(User)
+    votes_total = models.IntegerField(default = 1)
+```
+
+`ForeignKey`
+
+The foreignkey make reference to a field in a database. This make the author be the data inside the User database. So if the author change his name, the post's author will be updated automatically
+
+### S06E70: Saving post object
+
+`posts/views.py`
+```
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from . import models
+# Create your views here.
+
+@login_required
+def create(request):
+    if request.method == 'POST':
+        if request.POST['title'] and request.POST['url']:
+            post = models.Posts()
+            post.title = request.POST['title']
+            post.url = request.POST['url']
+            post.pub_date = timezone.datetime.now()
+            post.author = request.user
+            post.save()
+            return render(request, 'posts/create.html', {'error': 'Post success'})
+    else:
+        return render(request, 'posts/create.html')
+```
+
+Don't forget to register the model to the admin
+
+`admin.py`
+
+```
+from django.contrib import admin
+from . import models
+# Register your models here.
+admin.site.register(models.Posts)
+```
+
+
+### S06E72: Homepage
+
+```
+<a href="{% url 'posts:create' %}">
+    New post
+</a>
+
+{% for post in post.all %}
+<div>
+    <a href="#">UP</a> {{post.votes_total}} <a href="#">DOWN</a> -
+    <a href="{{post.url}}"> {{post.title}}</a>
+    {{post.pub_date}} by {{post.author.username}}
+</div>
+{% endfor %}
+```
+
+posts/views
+```
+def home(request):
+    post = models.Posts.objects.order_by('votes_total')
+    return render(request, 'posts/home.html', {'post': post})
+```
+
+### S06E73: Voting
+
+How to check if the url starts with http or www
+
+```
+if request.POST['url'].startswith('http://') or request.POST['url'].startswith('https://'):
+    post.url = request.POST['url']
+else:
+    post.url = 'http://' + request.POST['url']
+```
+
+
+Voting system
+
+```
+def upvote(request, pk):
+    if request.method == 'POST':
+        post = models.Posts.objects.get(pk=pk)
+        post.votes_total += 1
+        post.save()
+        return redirect('home')
+    else:
+        return redirect('home')
+
+
+def downvote(request, pk):
+    if request.method == 'POST':
+        post = models.Posts.objects.get(pk=pk)
+        post.votes_total -= 1
+        post.save()
+        return redirect('home')
+    else:
+        return redirect('home')
+```
+
+`home.html`
+
+```
+{% for post in post.all %}
+<div>
+    <form method="POST" action="{% url 'posts:upvote' post.id %}">
+        {% csrf_token %}
+        <button>UP</button>
+    </form>
+    {{post.votes_total}}
+    <form method="POST" action="{% url 'posts:downvote' post.id %}">
+        {% csrf_token %}
+        <button>UP</button>
+    </form>
+    <a href="{{post.url}}"> {{post.title}}</a>
+    {{post.pub_date}} by {{post.author.username}}
+</div>
+{% endfor %}
+```
+
+`posts/url.py`
+```
+urlpatterns = [
+    url(r'^create/', views.create, name="create"),
+    url(r'(?P<pk>[0-9]+)/upvote', views.upvote, name="upvote"),
+    url(r'(?P<pk>[0-9]+)/downvote', views.downvote, name="downvote"),
+]
+```
+
+### S06E74: Extending templates
+
+First specify it into the settings.py
+
+```
+TEMPLATES.DIR = ['templates']
+```
+
+then into templates/base.html
+
+```
+NAVBAR
+
+{% block content %}
+{% endblock %}
+
+Footer
+```
+
+Then into our html file (exemple: home.html, create.html)
+
+```
+{% extends 'base.html' %}
+{% block content %}
+
+content ..................
+
+{% endblock %}
+
+```
+
+### S06E75: Check if user authenticated
+
+Into the base.html
+
+```
+<a href="{ url 'home' }">Reddit Clone</a>
+
+{% if user.is_authenticated %}
+    <a href="{ url 'accounts:logout' }">Logout</a>
+{% else %}
+    <a href="{ url 'accounts:login' }">Login</a>
+    <a href="{ url 'accounts:signup' }">Signup</a>
+{% endif %}
+```
+
+### S06E76: Logout
+
+https://stackoverflow.com/questions/3521290/logout-get-or-post/3521322
+`We're using a POST method because of brwoser prefetching the urls (they call the url before you press ok to render it faster). So if we're using a GET method, if we're typing the url, the browser can logout us automatically and that sux`
+
+
+```
+{% if user.is_authenticated %}
+    <a href="#" onClick="document.getElementById('logout').submit()">Logout</a>
+    <form id="logout" method="POST" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+    </form>
+{% else %}
+```

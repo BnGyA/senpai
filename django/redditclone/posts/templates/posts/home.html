@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Reddit clone</h1>
+<a href="{% url 'posts:create' %}">
+    New post
+</a>
+
+{% for post in post.all %}
+<div>
+    <form method="POST" action="{% url 'posts:upvote' post.id %}">
+        {% csrf_token %}
+        <button>UP</button>
+    </form>
+    {{post.votes_total}}
+    <form method="POST" action="{% url 'posts:downvote' post.id %}">
+        {% csrf_token %}
+        <button>Down</button>
+    </form>
+    <a href="{{post.url}}"> {{post.title}}</a>
+    {{post.pub_date_pretty}} by <a href="{% url 'posts:userposts' post.author.id %}">{{post.author.username}}</a>
+</div>
+{% endfor %}
+
+{% endblock %}
