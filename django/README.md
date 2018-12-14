@@ -278,8 +278,8 @@ Create a new virtual env
 mkvirtualenv name
 easy-intall --upgrade pip
 pip install django
+django-admin startproject name
 ```
-
 
 ### S04E30: Apps
 

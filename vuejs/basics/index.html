@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Vuejs - basics</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        
+        <div id="app">
+            <h1>{{title}}</h1>
+            <p>{{printMe("Yolo")}}</p>
+            <a v-bind:href="url">Here is a binded link</a>
+            <div v-bind:class="classes">Classes binding : {{classes[1]}}</div>
+            <input type="text" :value="title">
+
+
+            <p>Increment this number : {{number}}</p>
+            <button v-on:click="number++">Increment</button>
+            <button v-on:dblclick="decrease(1)">Decrease</button>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>
