@@ -4,13 +4,15 @@
     <Navbar /> 
     <AllFriends :friends="friends" @delete="deleteFriend" />
     <OnlineFriends :friends="friends" />
+    <Blogs />
   </div>
-</template>
+</template> 
 
 <script>
 import  Navbar from './Navbar'
 import AllFriends from './AllFriends'
 import OnlineFriends from './OnlineFriends'
+import Blogs from './Blogs'
 
 export default {
   name: 'app',
@@ -18,7 +20,8 @@ export default {
     //Navbar: Navbar -> es6
     Navbar,
     AllFriends,
-    OnlineFriends
+    OnlineFriends,
+    Blogs
   },
   data () {
     return {
