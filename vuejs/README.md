@@ -16,6 +16,14 @@
 - [Lesson 11: Computed Properties(Custom search box)](#)
 
 [3. The Vue Router](#the-view-router)
+- [Lesson 1: What is the Vue Router](#what-is-the-vue-router)
+- [Lesson 2: Setting up Routes](#setting-up-routes)
+- [Lesson 3: Router links](#router-links)
+- [Lesson 4: Watching the $route Object](#watching-the-route-object)
+- [Lesson 5: More on router Links](#more-on-router-links)
+- [Lesson 6: Programmatically redirecting users](#programmatically-redirecting-users)
+- [Lesson 7: Hash vs History mode](#hash-vs-history-mode)
+- [Lesson 8: Styling active links](#styling-active-links)
 
 ## Vue basics
 
@@ -96,3 +104,50 @@ computed: {
 }
 ``` 
 ## The Vue Router
+
+### What is the Vue Router 
+Vue is already a great Javascript library that allows you to create some really cool, dynamic, front-end applications. Vue is also great for single page applications (SPA). SPAs work a little differently that your standard backend web application built in something like PHP. Instead of making requests to different routes on the backend and getting a fully rendered page as a response, a SPA does all the page rendering on the front-end and only sends requests to the server when new data is needed or needs to be refreshed or saved.
+
+This can improve the responsiveness of your web application because you can render the pages once and display them dynamically based on the current context of the application. In order to make this work, you need a way to distinguish the different views or pages from eachother. In SPAs this is done with a router. Luckily Vue has a fully supported first-party router library called vue-router.
+
+```
+// Console
+vue init webpack routing
+```
+
+### Setting up Routes
+***app.vue***
+```html
+<template>
+  <div id="app">
+    <img src="./assets/logo.png">
+    <router-view/>
+  </div>
+</template>
+```
+***router/index.js***
+```js
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    }
+  ]
+})
+```
+
+### Router links
+
+We are binding the to so it matches the name defined into the ***router/index.js*** and the path/href will be automatically generated
+
+```html
+<li><router-link :to="{ name: 'About'}">About</router-link></li>
+```
