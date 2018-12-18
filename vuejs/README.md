@@ -280,3 +280,5 @@ The /#/ is used for Vuejs to detect it and not to automatically send a request t
 When using router-link, 2 active classes are automatically added:
 router-link-exact-active : means that we are on the exact url
 router-link-active: means that we are on a subbset of this link for exemple : /about/ link will have only this class if we go to /about/hey
+
+## Ninja Smoothies
