@@ -1,7 +1,8 @@
 <template>
     <div class="blogs">
         <h2>{{ blogTitle }}</h2>
-        <div v-for="post in posts" :key="post.id">
+        <input v-model="searchTerm" />
+        <div v-for="post in filteredPosts" :key="post.id">
             <h3>{{post.title}}</h3>
             <p>{{post.body | snippet}}</p>
         </div>
@@ -18,12 +19,22 @@ export default {
     data() {
         return {
             blogTitle: 'Blogs',
-            posts: []
+            posts: [],
+            searchTerm: ''
         }
     },
     methods: {
         changeTitle(){
             this.blogTitle = 'Amazing Blog Site'
+        }
+    },
+    computed: {
+        filteredPosts(){
+            return this.posts.filter(post =>{
+                // if the title is present, match will return true and the post will not be filterred
+                return post.title.match(this.searchTerm)
+                
+            })
         }
     },
     created(){
