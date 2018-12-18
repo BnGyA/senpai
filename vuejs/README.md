@@ -151,3 +151,132 @@ We are binding the to so it matches the name defined into the ***router/index.js
 ```html
 <li><router-link :to="{ name: 'About'}">About</router-link></li>
 ```
+
+### Route Parameters
+
+Imagine to have a profil section, the url would be something like this : *** mondomaine.com/users/user_id ***. The route would be different for earch users but we need the template to remain the same while the infos would change.
+
+```js
+{
+    path: '/profile/:user_id',
+    name: 'ViewProfile',
+    component: ViewProfile
+}
+```
+
+***ViewProfile.vue***
+```js
+<template>
+    <div class="view-profile">
+        <h2>Profile</h2>
+        <p>{{userId}}</p>
+    </div>
+</template>
+
+<script>
+export default {
+    name:'ViewProfile',
+    data(){
+        return{
+            userId: this.$route.params.user_id
+        }
+    }
+}
+</script>
+
+<style>
+</style>
+```
+
+There is one "bug", if you update the userId in the navbar, it will not be updated. We need to set a watcher on it.
+
+### Watching the route
+
+This is how we can fix it by setting up a watcher for the $route
+
+```js
+<script>
+export default {
+    name:'ViewProfile',
+    data(){
+        return{
+            userId: this.$route.params.user_id
+        }
+    },
+    methods: {
+        updateId(){
+            this.userId = this.$route.params.user_id
+        }
+    },
+    watch: {
+        $route: 'updateId'
+    }
+}
+</script>
+```
+
+### More on Router Links
+
+In this lesson, we are setting up links to different user's profile that could come from an API. The idea is to pass the param argument inside the router-link
+
+```js
+<template>
+    <nav class="main-nav">
+        <ul>
+            <li><router-link :to="{ name: 'Home'}">Home</router-link></li>
+            <li><router-link :to="{ name: 'About'}">About</router-link></li>
+        </ul>
+        <h2>User Profiles</h2>
+        <ul>
+            <li v-for="(id, index) in userIds" :key="index">
+                <router-link :to="{ name: 'ViewProfile', params: {user_id: id}}">Profile {{id}}</router-link>
+            </li>
+        </ul>
+    </nav>
+</template>
+
+<script>
+export default {
+    name: 'Navbar',
+    data(){
+        return{
+            userIds: ['1', '2', '3', '4']
+        }
+    }
+}
+</script>
+```
+
+### Programmatically Redirecting Users
+
+How to redirect the user while clicking on the submit button of a form for exemple;
+We won't make a form here but just a button to show how it works
+
+$router is different than $route. The router contain all the history of urls, $route only contains the current route.
+
+```html
+<li><button @click="goHome">Redirect to Home</button></li>
+```
+
+```js
+methods: {
+    goHome(){
+        this.$router.push({ name: 'Home' })
+    },
+    goBack(){
+        this.$router.go(-1)
+    }
+}
+```
+
+
+### Hash vs History mode
+
+The /#/ is used for Vuejs to detect it and not to automatically send a request to the server. But we can make the url prettier with mode: history into the index.js.
+***BE AWARE*** If we use this history mode, we need to configure the server aswell
+
+### Styling active links
+
+When using router-link, 2 active classes are automatically added:
+router-link-exact-active : means that we are on the exact url
+router-link-active: means that we are on a subbset of this link for exemple : /about/ link will have only this class if we go to /about/hey
