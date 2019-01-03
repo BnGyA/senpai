@@ -10,6 +10,11 @@
           </li>
         </ul>
       </div>
+      <router-link :to="{name: 'EditSmoothie', params: {smoothie_slug: smoothie.slug}}">
+        <span class="btn-floating btn-large halfway-fab pink">
+            <i class="material-icons edit">edit</i>
+        </span>
+      </router-link>
     </div>
   </div>
 </template>
@@ -26,9 +31,12 @@ export default {
   },
   methods: {
     deleteSmoothie(id){
-      this.smoothies = this.smoothies.filter(smoothie =>{
-        return smoothie.id != id
-      })
+      db.collection('smoothies').doc(id).delete()
+      .then(() => {
+        this.smoothies = this.smoothies.filter(smoothie =>{
+          return smoothie.id != id
+        })
+      })  
     }
   },
   created(){

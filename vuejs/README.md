@@ -282,3 +282,149 @@ router-link-exact-active : means that we are on the exact url
 router-link-active: means that we are on a subbset of this link for exemple : /about/ link will have only this class if we go to /about/hey
 
 ## Ninja Smoothies
+
+Deleting (local) data
+
+```js
+deleteSmoothie(id){
+    this.smoothies = this.smoothies.filter(smoothie =>{
+       return smoothie.id != id
+    })
+}
+```
+
+### Firebase
+
+Free service by google that provides a Nosql realtime database, app deployement, authentification system
+
+Here is how you can retrieve data from a database in firebase (do not forget to install firebase with npm)
+
+```
+npm install firebase --save
+```
+
+***firebase/init.js***
+```js
+import firebase from 'firebase'
+import 'firebase/firestore'
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyAIwIM-udD0TYNqohsWevJw71mhamIN8gA",
+    authDomain: "ninja-smoothies-61466.firebaseapp.com",
+    databaseURL: "https://ninja-smoothies-61466.firebaseio.com",
+    projectId: "ninja-smoothies-61466",
+    storageBucket: "ninja-smoothies-61466.appspot.com",
+    messagingSenderId: "601748917258"
+};
+const firebaseApp = firebase.initializeApp(config);
+firebaseApp.firestore().settings({timestampsInSnapshots: true})
+
+/// export firestore database
+export default firebaseApp.firestore() 
+```
+
+
+***Index.vue***
+```js
+<script>
+import db from '@/firebase/init'  
+
+export default {
+  name: 'Index',
+  data () {
+    return {
+      smoothies: []  
+    }
+  },
+  methods: {
+    deleteSmoothie(id){
+      this.smoothies = this.smoothies.filter(smoothie =>{
+        return smoothie.id != id
+      })
+    }
+  },
+  created(){
+    db.collection('smoothies').get() 
+    .then(snapshot => {
+      snapshot.forEach(doc =>{
+        //console.log(doc.data(), doc.id)
+        let smoothie = doc.data()
+        smoothie.id = doc.id
+        this.smoothies.push(smoothie)
+      })
+    })
+  }
+}
+</script>
+```
+
+Delete from the firebase db 
+
+```js
+deleteSmoothie(id){
+    db.collection('smoothies').doc(id).delete()
+    .then(() => {
+    this.smoothies = this.smoothies.filter(smoothie =>{
+        return smoothie.id != id
+    })
+    })  
+}
+```
+
+Add to the firebase db & give a slug (with the slugify lib)
+
+```js
+AddSmoothie(){    
+    if(this.title){
+        this.feedback = null
+        // create a slug
+        this.slug = slugify(this.title, {
+            replacement: '-',
+            remove: /[$*_+~.()'"!\-:@]/g,
+            lower: true
+        })
+        // Add smoothie to the Firebase 
+        db.collection('smoothies').add({
+            title: this.title,
+            ingredients: this.ingredients,
+            slug: this.slug
+        }).then(()=>{
+            // when pushed to the db, redirect to the index
+            this.$router.push({name : 'Index'})
+        }).catch(err =>{
+            console.log(err)
+        })
+    } else {
+        this.feedback = "You must enter a Smoothie Title"
+    }
+}
+```
+
+Delete an ingredient 
+```js
+deleteIng(ing){
+    this.ingredients = this.ingredients.filter(ingredient => {
+        return ingredient != ing
+    })
+}
+```
+Create a route with a param
+
+```js
+{
+    path: '/edit-smoothie/:smoothie_slug',
+    name: 'EditSmoothie',
+    component: EditSmoothie
+}
+```
+
+Pass a route with a slug 
+```html
+<!-- smoothie.slug comes from the v-for="smoothie in smoothies" -->
+<router-link :to="{name: 'EditSmoothie', params: {smoothie_slug: smoothie.slug}}">
+    <span class="btn-floating btn-large halfway-fab pink">
+        <i class="material-icons edit">edit</i>
+    </span>
+</router-link>
+```

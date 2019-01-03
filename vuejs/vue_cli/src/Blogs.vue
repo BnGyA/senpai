@@ -43,7 +43,7 @@ export default {
             this.posts = response.data
         }).catch(err =>{
             console.log(err)
-        })
+        }) 
     }
 }
 </script>
