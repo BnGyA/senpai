@@ -50,7 +50,7 @@ export default {
             drawer: false,
             links: [
                 {icon: 'dashboard', text: 'Dashboard', route: '/'},
-                {icon: 'folder', text: 'My Projects', route: '/projects'},
+                {icon: 'folder', text: 'My Projects', route: '/project'},
                 {icon: 'person', text: 'Team', route: '/team'},
             ]
         }
