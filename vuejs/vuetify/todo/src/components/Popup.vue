@@ -26,7 +26,7 @@
 </template>
 <script>
 import format from 'date-fns/format'
-import db from '@/firebase'
+import db from '@/main'
 export default {
     data(){
         return{
@@ -53,7 +53,7 @@ export default {
                 this.loading = true;
                 // collection('nom_de_collection')
                 db.collection('projects').add(project).then(() =>{
-
+                    // eslint-disable-next-line
                     console.log('added to the db');
                     this.loading = false;
                     this.dialog = false;
