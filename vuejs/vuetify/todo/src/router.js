@@ -7,6 +7,7 @@ import Project from '@/views/Project.vue'
 import Team from '@/views/Team.vue'
 import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
+import Statistics from '@/views/Statistics.vue'
 
 Vue.use(Router);
 
@@ -35,6 +36,14 @@ const router = new Router({
       }
     },
     {
+      path: '/statistics',
+      name: 'statistics',
+      component: Statistics,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/team',
       name: 'team',
       component: Team,
@@ -51,7 +60,8 @@ const router = new Router({
       path: '/signup',
       name: 'signup',
       component: Signup
-    }
+    },
+
   ]
 });
 

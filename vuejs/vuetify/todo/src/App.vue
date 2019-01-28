@@ -14,6 +14,7 @@
 <script>
 import Navbar from '@/components/Navbar'
 import firebase from 'firebase'
+
 export default {
   name: 'App', 
   components: {Navbar },

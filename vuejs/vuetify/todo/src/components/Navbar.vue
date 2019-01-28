@@ -67,6 +67,7 @@ export default {
                 {icon: 'dashboard', text: 'Dashboard', route: '/dashboard'},
                 {icon: 'folder', text: 'My Projects', route: '/project'},
                 {icon: 'person', text: 'Team', route: '/team'},
+                {icon: 'bubble_chart', text: 'Statistics', route: '/statistics'},
             ],
             snackbar: false,
             welcomeBar: false,
