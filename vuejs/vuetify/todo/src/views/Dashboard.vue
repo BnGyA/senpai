@@ -5,7 +5,7 @@
 
         <v-layout row class="mb-3">
             <v-tooltip top>
-              <v-btn small flat color="grey" @click="sortBy('title')" slot="activator">
+              <v-btn  flat color="grey" @click="sortBy('title')" slot="activator">
                 <v-icon left small>folder</v-icon>
                 <span class="caption text-lowercase">By projects name</span>
               </v-btn>
@@ -13,15 +13,22 @@
             </v-tooltip>
 
             <v-tooltip top>
-              <v-btn small flat color="grey" @click="sortBy('person')" slot="activator">
+              <v-btn  flat color="grey" @click="sortBy('person')" slot="activator">
                 <v-icon left small>person</v-icon>
                 <span class="caption text-lowercase">By person</span>
               </v-btn>
               <span>Sort projects by person</span>
             </v-tooltip>
+              <v-flex xs3 class="align-top">
+              <v-select
+                :items="teams" 
+                v-model="selection"
+                label="Team Member"
+              ></v-select>
+            </v-flex>
         </v-layout>
 
-        <v-card flat v-for="project in projects" :key="project.title">
+        <v-card flat v-for="project in filteredList" :key="project.title">
           <v-layout row wrap :class="`pa-3 project ${project.status}`">
             <v-flex xs12 md6>
               <div class="caption grey--text">Project title</div>
@@ -54,7 +61,9 @@
     name: 'Dashboard',
     data(){
       return{
-        projects: []
+        projects: [],
+        teams: [],
+        selection: undefined
     }
   },
   methods: {
@@ -62,7 +71,18 @@
       this.projects.sort((a,b) => a[prop] < b[prop] ? -1 : 1)
     }
   },
+  computed: {
+    filteredList(){
+      if(this.selection && this.selection != 'All'){
+        return this.projects.filter(project =>{
+          return project.person === this.selection
+        })
+      }
+      return this.projects
+    }
+  },
   created(){
+    // Get projects
     db.collection('projects').onSnapshot(res =>{
       const changes = res.docChanges();
       changes.forEach(change => {
@@ -72,6 +92,20 @@
             ...change.doc.data(),
             id: change.doc.id
           })
+        }
+      });
+    });
+
+    //Get team members
+    db.collection('team').onSnapshot(res =>{
+      const changes = res.docChanges();
+      changes.forEach(change => {
+        if (change.type === 'added'){
+          this.teams.push('All');
+          this.teams.push(
+            // spread the properties
+            change.doc.data().name
+          )
         }
       });
     })
