@@ -18,11 +18,11 @@
                 <span>Yolo</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat color="grey" router to='/login'>
+            <v-btn v-if="!this.currUser" flat color="grey" router to='/login'>
                 <span>Login</span>
                 <v-icon right>exit_to_app</v-icon>
             </v-btn>
-            <v-btn flat color="grey" @click='logout()'>
+            <v-btn v-if="this.currUser != ''" flat color="grey" @click='logout()'>
                 <span>Sign Out</span>
                 <v-icon right>exit_to_app</v-icon>
             </v-btn>
@@ -34,7 +34,7 @@
                     <v-avatar size='100'>
                         <img src="https://dummyimage.com/100x100/000/fff" alt="">
                     </v-avatar>
-                    <p class="white--text subheading mt-1">Benjamin Rochez</p>
+                    <p class="white--text subheading mt-1">{{this.currUser}}</p>
 
                 </v-flex>
                 <v-flex class="mt-4 mb-3">
@@ -69,7 +69,8 @@ export default {
                 {icon: 'person', text: 'Team', route: '/team'},
             ],
             snackbar: false,
-            welcomeBar: false
+            welcomeBar: false,
+            currUser: ''
         }
     },
     methods: {
@@ -91,10 +92,18 @@ export default {
             })
         }
     },
+    created(){
+        if(firebase.auth().currentUser){
+            this.currUser = firebase.auth().currentUser.email;
+        } else {
+            this.currUser = ''
+        }
+    },
     watch:{
         $route (to, from){
         if(from.name === 'login' && to.name === 'dashboard'){
             this.openWelcome();
+            this.currUser = firebase.auth().currentUser.email;
         }
     }
 } 
