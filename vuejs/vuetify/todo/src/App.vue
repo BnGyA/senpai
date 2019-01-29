@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <Navbar />
+  <v-app :dark="darkTheme">
+    <Navbar @toggleDark="toggleDark"/> 
     
       <v-content class="mx-4 mb-4">
         <transition name="fade">
@@ -21,8 +21,15 @@ export default {
   data () {
     return {
       currUser: '',
+      darkTheme: false
     }
   },
+  methods: {
+    toggleDark(){
+      
+      this.darkTheme = !this.darkTheme
+    }
+  }
   
 }
 </script>

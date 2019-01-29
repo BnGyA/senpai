@@ -18,6 +18,9 @@
                 <span>Yolo</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn @click="toggleDark" flat>
+                <v-icon>whatshot</v-icon>
+            </v-btn>
             <v-btn v-if="!this.currUser" flat color="grey" router to='/login'>
                 <span>Login</span>
                 <v-icon right>exit_to_app</v-icon>
@@ -26,6 +29,7 @@
                 <span>Sign Out</span>
                 <v-icon right>exit_to_app</v-icon>
             </v-btn>
+        
         </v-toolbar>
 
         <v-navigation-drawer v-model="drawer" app  class="primary">
@@ -91,6 +95,9 @@ export default {
             firebase.auth().signOut().then(() =>{
                 this.$router.replace('login');
             })
+        },
+        toggleDark(){
+            this.$emit('toggleDark');
         }
     },
     created(){

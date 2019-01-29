@@ -2,7 +2,6 @@ var immunoData = {
     labels: ['PD-L-1', 'CD8', 'TMB', 'MSI', 'MUT-SENSI'],
     datasets: [{
         label: 'Immuno',
-        backgroundColor: "rgba(200,0,0,0.2)",
         data: [65, 75, 70, 80, 60],
         pointHoverRadius: 10,
     }]
