@@ -6,7 +6,7 @@
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <Adder @articleAdded="updateList()" />
+      
     </v-toolbar>
 
     <v-content>
@@ -19,16 +19,13 @@
 import Adder from '@/components/Adder'
 export default {
   name: 'App',
-  components: {Adder},
   data () {
     return {
       
     }
   },
   methods: {
-    updateList(){
-      this.$root.$emit('updateList')
-    }
+    
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="600px" v-model="dialog">
-        <v-btn flat slot="activator" class="success">
+        <v-btn flat slot="activator" class="success" >
             Add new article
         </v-btn>
         <v-card>
@@ -33,10 +33,10 @@ export default {
         addArticle(){
             this.loading = true;
             
-            axios.post('http://127.0.0.1:8000/api/article/', this.newArticle).then(res =>{
+            axios.post('http://127.0.0.1:8000/api/article/', this.newArticle).then((res) =>{
                 this.loading = false;
                 this.dialog = false;
-                this.$root.$emit('articleAdded');
+                this.$emit('articleAdded');
                 this.newArticle.article_heading = null;
                 this.newArticle.article_body = null;
             }).catch(err =>{
