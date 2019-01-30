@@ -13,10 +13,10 @@
               <td>{{props.item.article_heading}}</td>
               <td>{{props.item.article_body}}</td>
               <td>
-                <v-btn flat class="success" @click="getArticle(props.item.article_id)" >
+                <!--<v-btn flat class="success" @click="passArticle(props.item.article_id)" >
                     Edit        
-                </v-btn>
-                <Updater :currentArticle="currentArticle"/>
+                </v-btn>-->
+                <Updater :currentArticle="props.item"/>
                 <!--<v-btn class="success" @click="getArticle(props.item.article_id)">Edit</v-btn>-->
                 <v-btn class="warning" @click="deleteArticle(props.item.article_id)">Delete</v-btn>
               </td>
@@ -71,18 +71,17 @@ export default {
           console.log(err)
         })
       },
-     getArticle(id){
-            
+     getArticle(id){ 
             this.loading = true;
-            axios.get(`http://127.0.0.1:8000/api/article/${id}`).then((res) =>{
+            axios.get(`http://127.0.0.1:8000/api/article/${id}/`).then((res) =>{
             this.currentArticle = res.data
             // eslint-disable-next-line
-            console.log(currentArticle)
+            console.log(this.currentArticle)
             this.loading = false;
             }).catch(err => {
             this.loading = false
             // eslint-disable-next-line
-            console.log('yo', err)
+            console.log(err)
             })
         },
       deleteArticle(id){
