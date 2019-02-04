@@ -343,3 +343,68 @@ function inputWatcher(e){
     text.innerText = val;
 }
 ```
+## Event Bubbling & delegation
+
+When an event occurs on an element of the page, the act of bubbling is that the event propagates itself to his parent tree, delegation is the opposite
+**Bubbling**
+```html
+<div class="card">
+    <ul class="card-list">
+        <li class="card-item">
+            content
+        </li>
+    </ul>
+</div>
+
+```
+
+```js
+document.querySelector('card').addEventListener('click', function(){
+    console.log('card clicked');
+});
+document.querySelector('card-list').addEventListener('click', function(){
+    console.log('card clicked');
+});
+document.querySelector('card-item').addEventListener('click', function(){
+    console.log('card clicked');
+});
+
+// if we click on card-item, 3 console log will appear
+```
+
+
+**Delegation**
+```html
+<div class="card">
+    <ul class="card-list">
+        <li class="card-item">
+            <a href="#" class="card-deleter yolo"></a>
+        </li>
+        <li class="card-item">
+            <a href="#" class="card-deleter yolo"></a>
+        </li>
+    </ul>
+</div>
+
+```
+
+```js
+const delItem = document.querySelector('card-deleter');
+delItem.addEventListener('click', deleteItem);
+
+function deleteItem(e){
+    console.log('delete item');
+}
+```
+If we do this, only the first one will activate the function (the object added after the DOM is loaded won't trigger it either). We need to use event delegation
+
+```js
+
+document.body.addEventListener('click', deleteItem);
+
+function deleteItem(e){
+    if(e.target.classList.contains('card-deleter')){
+        console.log('delete item');
+    }
+}
+```

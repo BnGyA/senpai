@@ -178,7 +178,15 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 )
 ```
 
+#### Slash convention
 
+In order not to have to add a slash at the end of the API's url
+
+router.py
+
+```python
+router = DefaultRouter(trailing_slash=False)
+```
 
 ## APP
 Create a new vue-js app with vuetify
