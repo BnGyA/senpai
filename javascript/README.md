@@ -408,3 +408,46 @@ function deleteItem(e){
     }
 }
 ```
+
+## Local storage
+Same as Session storage unless that local storage will stay even if you close your navigator. The local storage's data will stay forever  unless you clear  them out manually.
+
+```js
+localStorage.setItem('name', 'John');
+
+localStorage.removeItem('name');
+
+const name = localStorage.getItem('name');
+
+localStorage.clear(); // will clear all the vars
+```
+
+Small 'todo-list'
+```js
+
+document.querySelector('form').addEventListener('submit', function(e){
+    const task = document.getElementById('task').value;
+
+    let tasks;
+
+    if(localStorage.getItem('tasks') === null){
+        tasks = [];
+    }else{
+        tasks = JSON.parse(localStorage.getItem('tasks'); 
+    }
+
+    tasks.push(task);
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    e.preventDefault();
+});
+
+const tasks = JSON.parse(localStorage.getItem('tasks'));
+
+tasks.forEach(task){
+    console.log(task);
+}
+```
+
+We need  to use JSON.parse & stringify because localStorage only  allows strings.
