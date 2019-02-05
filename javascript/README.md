@@ -565,3 +565,124 @@ Person.prototype.calcAge = function(){
 
 console.log(john.calcAge); // this will work the same
 ```
+
+Why are we using prototypes instead ?
+
+``` 
+To keep things modular, for efficiency, performance and maintenance. 
+
+Someone described this in another JS course forum and it clicked for me. Imagine if several if Person Objects shared a kitchen with a microwave. They all have access to use the microwave when they want to. But they are not all walking around carrying individual microwaves. You can add more appliances to the kitchen – a blender or toaster - and Person objects can use them when they need to. 
+
+To take the analogy further..
+
+All the kitchen appliances share the same electrical service. It wouldn't make sense for every appliance to have it's own electric service. Therefore, when a Person object is using the blender they are also using the electric service that the blender is sharing. That's prototype inheritance.
+
+I think it's time for a margarita!
+```
+
+
+#### Prototypes inheritance
+
+```js
+// Person constructor
+function Person(firstName, lastName){
+    this.firstName = firstName;
+    this.lastName = lastName;
+}
+
+// Greeting
+Person.prototype.greeting = function(){
+    return `Hello there ${this.firstName} ${this.lastName}`;
+}
+const person1 = new Person('John', 'Doe');
+console.log(person1.greeting()); // will log: Hello there John Doe
+
+// Customer constructor
+function Customer(firstName, lastName, phone, membership){
+    Person.call(this, firstName, lastName); 
+
+    this.phone = phone;
+    this.membership = membership;
+}
+
+// Create customer
+const customer1 = new Customer('Tom', 'Smith', '555-555-55555', 'Standard');
+
+console.log(customer1); // will work
+console.log(customer1.greeting()); // won't work because we aren't using the inheritance yet
+```
+
+```js
+// inherit the Person prototype methods
+Customer.prototype = Object.create(Person.prototype);
+
+// Make customer.prototype return Customer()
+Customer.prototype.constructor = Customer;
+```
+
+
+#### Using Object.create
+Here is another way of using objects & prototypes in javascript
+```js
+
+const personPrototypes = {
+    greeting: function(){
+        return `Hello there ${this.firstName} ${this.lastName}`;
+    },
+    getsMarried: function(newLastName){
+        this.lastName = newLastName;
+    }
+}
+
+const mary = Object.create(personPrototypes);
+mary.firstName = 'Mary';
+mary.lastName = 'Williams';
+mary.age = 30;
+
+mary.getsMarried('Thompson');
+
+console.log(mary.greeting()); // -> hello there Mary Thompson
+
+const brad = Object.create(personPrototypes, {
+    firstName: {value, 'Brad'},
+    lastName: {value, 'Traversy'},
+    age: {value, 36}
+});
+
+console.log(brad);
+```
+
+
+
+#### ES6 classes & subclasses
+ES6 classes are conveniant syntax for OOP in javascript, es6 classes won't change the way it works under the hood
+```js
+class Person {
+    constructor(firstName, lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    greeting(){
+        return `Hello there ${this.firstName}`;
+    }
+}
+
+const ben = new Person('Ben', 'Rochez');
+console.log(ben.greeting());
+```
+With this syntax, methods are automatically added to the prototype.
+
+
+***Subclasses*** are prototypes inheritance in ES6
+
+```js
+class Customer extends Person {
+    constructor(firstName, lastName, phone, membership){
+        super(firstName, lastName);
+
+        this.phone = phone;
+        this.membership = membership;
+    }
+}
+```
