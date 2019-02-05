@@ -61,3 +61,35 @@ function createItem(item){
 
     todolist.appendChild(li);
 }
+
+document.getElementById('search').addEventListener('keyup', filterTasks);
+
+function filterTasks(e){
+    console.log('yo')
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll('.todo').forEach(function(task){
+        const item = task.firstChild.textContent;
+        if(item.toLowerCase().indexOf(text) != -1){
+            task.style.display = 'block';
+        } else {
+            task.style.display = 'none';
+        }
+    });
+}
+
+
+
+function Person(name, lastname, dob){
+    this.name = name;
+    this.lastname = lastname;
+    this.birthday = new Date(dob);
+    this.calcAge = function(){
+        const diff = Date.now() - this.birthday.getTime();
+        const ageDate = new Date(diff);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+}
+
+const john = new Person('John', 'Doe', '8-12-90');
+console.log(john)

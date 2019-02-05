@@ -451,3 +451,117 @@ tasks.forEach(task){
 ```
 
 We need  to use JSON.parse & stringify because localStorage only  allows strings.
+
+
+
+## Object Oriented Javascript
+
+### Constructors & 'this'
+
+We already talked about **Object literals**
+```js
+const brad = {
+    name: 'Brad',
+    age: 30
+}
+
+console.log(brad.age);
+```
+Object literals are great if we only need one instance of the object
+
+If we want to create multiple instances of the same object, we need **constructors**
+
+```js
+function Person(name, dob){
+    this.name = name;
+    this.birthday = new Date(dob);
+    this.calcAge = function(){
+        const diff = Date.now() - this.birthday.getTime();
+        const ageDate = new Date(diff);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+}
+
+const ben = new Person('Ben', '20-08-1992');
+console.log(ben);
+console.log(this); // will console the window object
+console.log(ben.calculateAge());
+```
+
+- When this is called into the global scope, it refers to the window object.
+
+
+#### Built in constructors
+Here are some available constructors but we tend not to use them because it slows down the application & it has no really usefull uses
+
+```js
+const name = new String('Ben'); // -> const name = 'Ben' is the equivalent
+
+// This is dangerous because here name isn't a typeof string, instead it is an object
+
+if(name === 'Ben'){
+    console.log('Yes');
+} else {
+    console.log('No');
+}
+
+// In this case, NO will be console.log
+
+// Number
+const num = new Number(5); // -> const num = 5;
+
+// Boolean
+const bool = new Boolean(true); // const bool = true;
+
+// Function
+const getSum = new Function('x', 'y', 'return 1 + 1'); // super weird
+
+// Array
+const arr = new Array(1,2,3); // const arr = [1,2,3];
+
+// Regular Expression
+const re = new RegExp('\\w+'); //const re = /\w+/;
+```
+
+
+### Prototypes
+Each object in Javascript has a prototype and the prototype is an object itself. All objects inherit their properties and methods from their prototypes.
+When we are using an object literal, we are inheriting from an Object.prototype
+When we are using a construction, we are inheriting from ie : Person.prototype
+
+```js
+
+function Person(name, lastname, dob){
+    this.name = name;
+    this.lastname = lastname;
+    this.birthday = new Date(dob);
+    this.calcAge = function(){
+        const diff = Date.now() - this.birthday.getTime();
+        const ageDate = new Date(diff);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+}
+
+const john = new Person('John', 'Doe', '8-12-90');
+console.log(john)
+```
+This console.log will give us that result
+
+  ![Alt text](prototype.png)
+
+The first __proto__ is the Person.prototype
+The second is the Object.prototype
+
+In our exemple, calcAge function should be defined into the prototype because the method is the same for each object
+
+```js
+
+// Calc age
+Person.prototype.calcAge = function(){
+        const diff = Date.now() - this.birthday.getTime();
+        const ageDate = new Date(diff);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+
+console.log(john.calcAge); // this will work the same
+```
