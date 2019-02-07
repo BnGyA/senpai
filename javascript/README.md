@@ -686,3 +686,146 @@ class Customer extends Person {
     }
 }
 ```
+
+
+
+## Asynchronous Javascript, Ajax & Fecth API
+
+Synchronous Code
+
+```js
+posts = loadPostsSync();
+// .. wait til posts are fetched
+// .. do something with posts
+
+doTheNextThing(); // Has ot wait until posts load
+```
+
+Asynchronous
+```js
+posts = loadPostsSync();
+// .. wait til posts are fetched
+// .. do something with posts
+
+doTheNextThing();// Doesn't have to wait until posts load
+```
+
+Most of the Asyn code you work with will be part of an API or library
+
+- XHMLHttpResquest & fetch
+- Jquery Ajax, Axios, other HTTP libraries
+- Node.js fs(filesystem) module
+
+There are a few ways to work with Async code
+
+- Callbacks
+- Promises
+- Async/Await
+
+
+#### Ajax
+- Asynchronous Js & XML
+- Set of web technologies
+- Send & Receive data asynchronously
+- Does not interfere with the current page
+- JSON has replaced XML for the most part
+
+![Alt text](ajax.png)
+- Make async requests in the background
+- no page reload/refresh
+- fetch data
+- very interactive
+
+**XmlHttpRequest(XHR) Object**
+- API in the form of an object
+- Provided by the browsers JS environment
+- Methods transfer data between client / server
+- Can be used with other protocols than HTTP
+- Can work with data other than XML(JSON, plain text)
+
+#### XHR Object methods
+
+**data.txt**
+```txt
+some text data
+```
+
+**app.js**
+```js
+document.getElementById('button').addEventListener('click', loadData);
+function loadData(){
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'data.txt', true);
+
+    xhr.onload = function(){
+        if(this.status === 200){
+            console.log(this.responseText);
+        }
+    }
+
+    xhr.onrerror = function(){
+        console.log('Request error...');
+    }
+
+    xhr.send();
+    // HTTP Statuses
+    // 200: OK
+    // 403: Forbiden
+    // 404: Not found
+}
+```
+
+#### Ajax & JSON
+
+**customer.json**
+```json
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "company": "123 Designs",
+        "phone": "4242-4242-42"
+    },
+    {
+        "id": 2,
+        "name": "Mary Doe",
+        "company": "456 Designs",
+        "phone": "4242-4242-42"
+    }
+]
+
+```
+
+
+**app.js**
+```js
+document.getElementById('button').addEventListener('click', loadCustomers);
+
+function loadCustomers(e){
+    const xhr : bew XMLHttpRequest();
+
+    xhr.open('GET', 'customer.json', true);
+
+    xhr.onload = function(){
+        if(this.status === 200){
+            const customer = JSON.parse(this.responseText);
+            customers.forEach(function(customer){
+                let output += `
+                <ul>
+                    <li>${customer.id}</li>
+                    <li>${customer.name}</li>
+                    <li>${customer.company}</li>
+                    <li>${customer.phone}</li>
+                </ul>
+            `;
+            })
+            
+            document.getElementById('customer').innerHTML = ouptut;
+
+        }
+    }
+
+    xhr.send();
+}
+```
