@@ -689,7 +689,7 @@ class Customer extends Person {
 
 
 
-## Asynchronous Javascript, Ajax & Fecth API
+## Asynchronous Javascript, Ajax & Fetch API
 
 Synchronous Code
 
@@ -828,4 +828,90 @@ function loadCustomers(e){
 
     xhr.send();
 }
+```
+#### REST APIs
+API
+- Application programming interface
+- Contract provided by one piece of software to another
+- Structured request and response
+
+REST
+- Reprensentational State Transfer
+- Architecture style for designing networker applications
+- Relies on a stateless, client-server protocol, almost always HTTP
+- Treats server objects as resources that can be created, read or destroyed
+- Can be used by virtually any programming language
+---
+- GET: retrieve data from a specified resource
+- POST: submit data to be processed to a specified resource
+- PUT: Update a specified resource
+- DELETE: Delete a specified resource
+
+- HEAD: Same as get but does NOT return a body
+- OPTIONS: returns the supported http methods
+- PATCH: update partial resource
+
+#### Callback functions
+https://codeburst.io/javascript-what-the-heck-is-a-callback-aba4da2deced 
+Simply put: A callback is a function that is to be executed after another function has finished executing — hence the name ‘call back’.
+
+More complexly put: In JavaScript, functions are objects. Because of this, functions can take functions as arguments, and can be returned by other functions. Functions that do this are called higher-order functions. Any function that is passed as an argument is called a callback function.
+
+```js
+
+const posts = [
+    {title: 'Post one', body: 'this is post one'},
+    {title: 'Post two', body: 'this is post two'}
+];
+
+
+function createPost(post){
+    setTimeout(function(){
+        posts.push(post)
+    }, 2000);
+}
+
+function getPosts(){
+    setTimeout(function(){
+        let output = '';
+        posts.forEach(function(post){
+            output += `<li>$post.title</li>`;
+        });
+        document.body.innerHTML = output;
+    }, 1000);
+}
+
+createPost({title: 'Post three', body: 'This is post three'});
+
+getPosts();
+```
+
+This will output only the 2 first because our code is synchronous and that createPost take 2s while getPosts only takes 1
+
+```js
+
+const posts = [
+    {title: 'Post one', body: 'this is post one'},
+    {title: 'Post two', body: 'this is post two'}
+];
+
+
+function createPost(post){
+    setTimeout(function(){
+        posts.push(post);
+        callback();
+    }, 2000);
+}
+
+function getPosts(){
+    setTimeout(function(){
+        let output = '';
+        posts.forEach(function(post){
+            output += `<li>$post.title</li>`;
+        });
+        document.body.innerHTML = output;
+    }, 1000);
+}
+
+createPost({title: 'Post three', body: 'This is post three'}, getPosts); // when createPost is done, callback getPosts();
 ```
