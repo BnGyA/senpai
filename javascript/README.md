@@ -679,7 +679,7 @@ With this syntax, methods are automatically added to the prototype.
 ```js
 class Customer extends Person {
     constructor(firstName, lastName, phone, membership){
-        super(firstName, lastName);
+        super(firstName, lastName); // super -> call();
 
         this.phone = phone;
         this.membership = membership;
