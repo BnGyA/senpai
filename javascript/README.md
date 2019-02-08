@@ -997,6 +997,7 @@ You can test this by returning res.text() on the JSON file, and then parsing tha
 #### The arrow function 
 
 Arrow function use a lexical this
+https://medium.com/beginners-guide-to-mobile-web-development/everything-you-need-to-know-about-es6-arrow-functions-and-lexical-this-19cce1a49bdf amazing article
 
 ```js
 // ES5 function
@@ -1082,4 +1083,23 @@ function getJson(){
     })
     .catch(err => console.log(err));
 }
+```
+
+
+#### Async & Await
+
+Async makes a function a promose and await makes something wait until a  promise is resolved
+
+```js
+async function getUsers(url){
+    // await response of the fetch call
+    const response = await fetch(url);
+
+    // Only proceed once its resolved
+    const data = await response.json();
+    // Only proceed once the second promise is resolved
+    return data;
+}
+
+getUsers('https://jsonplaceholder.typicode.com/posts').then(users => console.log(users));
 ```
