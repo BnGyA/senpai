@@ -966,3 +966,120 @@ createPost({title: 'Post three', body: 'This is post three'})
     }); 
 
 ```
+
+#### The Fetch API
+
+Have a look at **/fetch/app.js**
+```js
+document.getElementById('button1').addEventListener('click', getText);
+
+function getText(){
+    //return a promise
+    fetch('test.txt')
+    .then(function(res){
+        // return a promise
+       return res.text();
+    })
+    //get the promise from res.text()
+    .then(function(data) {
+        console.log(data)
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+}
+```
+
+Why don't we need to parse the JSON with fetch ? 
+***What I accidentally discovered is that the .json() method actually parses the data already. So essentially it's a .text() with a JSON.parse() built-in.
+You can test this by returning res.text() on the JSON file, and then parsing that data in the next .then(). It works the same way, but is obviously more code.***
+
+#### The arrow function 
+
+Arrow function use a lexical this
+
+```js
+// ES5 function
+const sayHello = function(){
+    console.log('Hello World');
+}
+
+// ES6 arrow function
+const sayHello = () => {
+    console.log('Hello');
+}
+
+// IF there's only one line
+const sayHello = () => console.log('Hello');
+
+// Same with return
+/*
+const sayHello = function(){
+    return 'Hello';
+}
+*/
+const sayHello = () => 'Hello'; 
+
+// Return Object literals
+const sayHello = () => ({msg: 'Hello'});
+
+// Parameters
+const sayHello = (name, lastname) => console.log(`Hello ${name} ${lastname}`);
+
+// If there's only one parameter, no need of ()
+const sayHello = name => console.log(`Hello ${name}`);
+
+// Arrow function as callback
+/*
+const users = ['Nathan', 'John'];
+const nameLengths = users.map(function(name){
+    return name.length;
+});
+*/
+
+//Shorter
+const users = ['Nathan', 'John'];
+const nameLengths = users.map((name) =>{
+    return name.length;
+});
+
+//Shortest (return)
+const users = ['Nathan', 'John'];
+const nameLengths = users.map(name => name.length);
+});
+```
+
+Exemple from the fetch api we used earlier
+```js
+/*
+// Get Json
+function getJson(){
+    fetch('test.json')
+    .then(function(res){
+        return res.json();
+    })
+    .then(function(data){
+        let output = '';
+        data.forEach(function(post){
+            output += `<li>${post.title}</li>`;
+        });
+        document.getElementById('output').innerHTML = output;
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+}
+*/
+function getJson(){
+    fetch('test.json')
+    .then(res => res.json())
+    .then(data => {
+        let output = ''; 
+        data.forEach(function(post){
+            output += `<li>${post.title}</li>`;
+        });
+        document.getElementById('output').innerHTML = output;
+    })
+    .catch(err => console.log(err));
+}
+```
