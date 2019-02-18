@@ -27,3 +27,46 @@ More about http headers = https://developer.mozilla.org/en-US/docs/Web/HTTP/Head
 
 ![alt text](imgs/behindthescene.png "Behind the Scene")
 ![alt text](imgs/eventloop.png "Event Loop")
+
+
+## Debugging
+
+## Express.js
+ 
+### Middleware
+![alt text](imgs/middleware_express.png "Express Middleware")
+
+```js
+npm install express --save
+```
+nb: --save because we want it in production
+```js
+const express = require('express');
+
+const app = express();
+
+app.use((req, res, next)=>{
+    console.log('In the middleware');
+    res.send('<h1>Hello from Express</h1>');
+    next();
+})
+
+app.listen();
+```
+
+next() is used to say that the server request has to go to the next middleware, otherwise, the next middleware won't be called
+
+
+### Handling routes
+
+```js
+// will be called if the url is /about. Be aware to not use next so the '/' isn't called
+app.use('/about', (req, res, next) =>{
+
+});
+
+// will be called if the url begins with /
+app.use('/', (req, res, next) =>{
+
+});
+```
