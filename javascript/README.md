@@ -10,7 +10,7 @@
 
 ### Data Types in Javascript
 
-* Primitive data types:
+* Primitive data types: 
 Stores directly in the location the variable accesses
 Stored on the stack
 
@@ -1088,7 +1088,7 @@ function getJson(){
 
 #### Async & Await
 
-Async makes a function a promose and await makes something wait until a  promise is resolved
+Async makes a function a promise and await makes something wait until a  promise is resolved
 
 ```js
 async function getUsers(url){
