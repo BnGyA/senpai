@@ -228,7 +228,7 @@ exports.routes = router; //Don't forget to update the import inside the app.js t
 exports.products = products; 
 ```
 
-![alt text](imgs/teplating.png "Express Summary")
+![alt text](imgs/templating.png "Templating engine")
 
 Exemple of templating engines
 - EJS
@@ -247,4 +247,47 @@ router.get('/', (req, res, next) =>{
     //res.sendFile(path.join(rootDir, 'views', 'shop.html'))
     res.render('shop', {prods: products, docTitle: 'Shop'}); 
 })
+```
+
+
+## Module View Controller
+![alt text](imgs/mvc.png "MVC")
+
+***controllers/product.js***
+```js
+const products = [];
+
+exports.getAddProduct = (req, res, next) => {
+    res.render('add-product', {
+        pageTitle: 'Add Product',
+        path: '/admin/add-product',
+        formsCSS: true,
+        productCSS: true,
+        activeAddProduct: true
+    });
+};
+
+
+exports.postAddProduct = (req, res, next) => {
+    products.push({ title: req.body.title });
+    res.redirect('/');
+};
+```
+
+***routes/admin.js***
+```js
+const express = require('express');
+const router = express.Router();
+
+
+const productsController = require('../controllers/product');
+
+// /admin/add-product => GET
+router.get('/add-product', productsController.getAddProduct);
+
+// /admin/add-product => POST
+router.post('/add-product', productsController.postAddProduct);
+
+module.exports = router;
+
 ```
