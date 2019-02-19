@@ -197,3 +197,40 @@ app.use(express.static(path.join(__dirname, 'public')));
 #### Module summary
 
 ![alt text](imgs/express_summary.png "Express Summary")
+
+
+## Dynamic content & Templating engine
+
+```js
+const path = require('path');
+const express = require('express');
+
+const router = express.Router();
+
+const rootDir = require('../utils/path');
+
+const products = [];
+
+
+router.get('/add-product', (req, res, next) =>{
+    res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res, next) =>{
+    // req.body comes from add-product
+    products.push({ title: req.body.title });
+    console.log(req.body);
+
+    res.redirect('/');
+})
+
+exports.routes = router; //Don't forget to update the import inside the app.js to be app.use('/admin', adminData.routes);
+exports.products = products; 
+```
+
+![alt text](imgs/teplating.png "Express Summary")
+
+Exemple of templating engines
+- EJS
+- Pug
+- Handlebars
