@@ -234,3 +234,17 @@ Exemple of templating engines
 - EJS
 - Pug
 - Handlebars
+***app.js***
+```js
+app.set('view engine', 'pug');
+app.set('views', 'views');
+```
+
+and into the js files 
+```js
+router.get('/', (req, res, next) =>{
+    const products = adminData.products;
+    //res.sendFile(path.join(rootDir, 'views', 'shop.html'))
+    res.render('shop', {prods: products, docTitle: 'Shop'}); 
+})
+```
