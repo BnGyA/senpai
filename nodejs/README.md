@@ -253,6 +253,8 @@ router.get('/', (req, res, next) =>{
 ## Module View Controller
 ![alt text](imgs/mvc.png "MVC")
 
+
+### Controllers
 ***controllers/product.js***
 ```js
 const products = [];
@@ -291,3 +293,165 @@ router.post('/add-product', productsController.postAddProduct);
 module.exports = router;
 
 ```
+
+### Models
+
+***models/product.js***
+```js
+const products = [];
+module.exports = class Product {
+    constructor(t){
+        this.title = t;
+    }
+
+    save(){
+        products.push(this)
+    }
+    // static so we can access the method without creating a new Product instance
+    static fetchAll(){
+        return products;
+    }
+}
+```
+***controllers/product.js***
+```js
+const Product = require('../models/product');
+
+exports.getAddProduct = (req, res, next) => {
+    res.render('add-product', {
+        pageTitle: 'Add Product',
+        path: '/admin/add-product',
+        formsCSS: true,
+        productCSS: true,
+        activeAddProduct: true
+    });
+};
+
+
+exports.postAddProduct = (req, res, next) => {
+    // create an instance of the product
+    const product = new Product(req.body.title);
+    product.save();
+    res.redirect('/');
+};
+
+exports.getProducts = (req, res, next) => {
+    // call the static method
+    const products = Product.fetchAll();
+    res.render('shop', {
+      prods: products,
+      pageTitle: 'Shop',
+      path: '/',
+      hasProducts: products.length > 0,
+      activeShop: true,
+      productCSS: true
+    });
+};
+```
+
+### Storing & fetching data in files via the model
+
+***product.js***
+```js
+const fs = require('fs');
+const path = require('path');
+
+module.exports = class Product {
+    constructor(t){
+        this.title = t;
+    }
+
+    save(){
+        const p = path.join(
+            path.dirname(process.mainModule.filename), 
+            'data', 
+            'products.json'
+        );
+        //if no products let products = [], else push this (which is the instance of the object), add it to the array and write it into the file
+        fs.readFile(p, (err, fileContent) => {
+            let products = [];
+            if(!err){
+                products = JSON.parse(fileContent);
+            }
+            products.push(this);
+            fs.writeFile(p, JSON.stringify(products), (err) =>{
+                console.log(err);
+            });
+        });
+    };
+
+    // Using a callback function to return the object when it is loaded
+    static fetchAll(callback){
+        const p = path.join(
+            path.dirname(process.mainModule.filename), 
+            'data', 
+            'products.json'
+        );
+        fs.readFile(p, (err, fileContent) => {
+            if(err){
+                callback([])
+            } 
+            callback(JSON.parse(fileContent));
+        })
+    }
+}
+```
+
+***controller/product.js***
+```js
+/// Using the callback function to render only when fetchAll is done
+exports.getProducts = (req, res, next) => {
+    const products = Product.fetchAll((products) =>{
+        res.render('shop', {
+            prods: products,
+            pageTitle: 'Shop',
+            path: '/',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCSS: true
+          });
+    });  
+};
+
+```
+
+Refactoring of the product model 
+```js
+const fs = require('fs');
+const path = require('path');
+
+const getProductsFromFile = (cb) =>{
+    const p = path.join(
+        path.dirname(process.mainModule.filename), 
+        'data', 
+        'products.json'
+    );
+    fs.readFile(p, (err, fileContent) => {
+        if(err){
+           return cb([])
+        } 
+        cb(JSON.parse(fileContent));
+    })
+}
+
+module.exports = class Product {
+    constructor(t){
+        this.title = t;
+    }
+    save(){
+        getProductsFromFile(products =>{
+            products.push(this);
+            fs.writeFile(p, JSON.stringify(products), (err) =>{
+                console.log(err);
+            });
+        })
+    };
+
+    static fetchAll(cb){
+        getProductsFromFile(cb);
+    }
+}
+```
+
+### Summary
+![alt text](imgs/mvc_summary.png "MVC")
