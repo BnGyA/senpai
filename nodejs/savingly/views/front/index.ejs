@@ -1,0 +1,32 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+
+    <main>
+        <% if (recipe.length > 0) { %>
+            <div class="grid">
+                <% for (let recip of recipe) { %>
+                    <article class="card product-item">
+                        <header class="card__header">
+                            <h1 class="product__title"><%= recip.title %></h1>
+                        </header>
+                        <div class="card__image">
+                            <img src="<%= recip.imageUrl %>"
+                                alt="<%= recipe.title %>">
+                        </div>
+                        <div class="card__content">
+                            <h2 class="product__price">$<%= recip.price %></h2>
+                            <p class="product__description"><%= recip.description %></p>
+                        </div>
+                        <div class="card__actions">
+                            <button class="btn">Add to Cart</button>
+                        </div>
+                    </article>
+                <% } %>
+            </div>
+        <% } else { %>
+            <h1>No Products Found!</h1>
+        <% } %>
+    </main>
+<%- include('../includes/end.ejs') %>
