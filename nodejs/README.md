@@ -455,3 +455,180 @@ module.exports = class Product {
 
 ### Summary
 ![alt text](imgs/mvc_summary.png "MVC")
+
+
+
+## Dynamic Routes & advanced models
+
+### See the details page
+
+We need to generate an ID during the save of our product object into the product model.
+To pass it to the view 
+```html
+<a href="/product/<%= product.id %>"></a>
+```
+
+We also need to update the route to handle those views
+```js
+router.get('/products/:productId');
+```
+
+Be carefull, if we got another route (ie: delete), we need to pass the most specific route first, otherwise the app would never reach the specific path
+
+```js
+router.get('/products/delete');
+router.get('/products/:productId', shopController.getProduct);
+```
+
+And into the controller
+
+```js
+exports.getProducts = (req, res, next) =>{
+  const prodId = req.params.productId;
+  Product.findById(prodId, product =>{
+      console.log(product);
+  })
+  res.redirect('/');
+}
+```
+
+To render to the view
+```js
+
+exports.getProducts = (req, res, next) =>{
+  const prodId = req.params.productId;
+  Product.findById(prodId, product =>{
+      res.render('shop/product-detail', {product: product});
+  })
+}
+```
+
+### Adding to the cart
+
+```html
+<form action="/cart" method='post'>
+    <button class="btn">Add to the cart</button>
+    <input type="hidden" name="productID" value="<%= product.id %>">
+</form>
+```
+
+```js
+exports.postCart = (req, res, next) =>{
+    // req is passed through the form
+    const prodId = req.body.productId;
+    Product.findById(prodId, (product) =>{
+      Cart.addProduct(prodId, product.price)
+    })
+}
+```
+
+Create a new cart model
+```js
+const fs = require('fs');
+const path = require('path');
+
+const p = path.join(
+  path.dirname(process.mainModule.filename),
+  'data',  
+  'cart.json'
+);
+
+module.exports = class Cart{
+    static addProduct(id, productPrice){
+        // fetch the previous cart
+        fs.readFile(p, (err, fileContent) =>{
+            // if we have an error, create a cart
+            let cart = {products: [], totalPrice: 0};
+
+            // else the cart = the previous cart
+            if(!err){
+                cart = JSON.parse(fileContent);
+            }
+
+            // Analyse the cart
+            const existingProductIndex = cart.products.findIndex(prod => prod.id === id);
+            const existingProduct = cart.products[existingProductIndex];
+            let updatedProduct;
+            if(existingProduct){
+                // if existing, update the quantity
+                updatedProduct = { ...existingProduct};
+                updatedProduct.qty = updatedProduct.qty + 1;
+                // update the array of products
+                cart.products = [...cart.products]
+                // set the already existing product to be equal to the updatedProduct
+                cart.products[existingProductIndex] = updatedProduct;
+            }else{
+                // Add new product
+                updatedProduct = {id: id, qty: 1};
+                // update the array of products with the 
+                cart.products = [...cart.products, updatedProduct]
+            }
+            // the second + converts productPrice to a number
+            cart.totalPrice = cart.totalPrice + +productPrice;
+            fs.writeFile(p, JSON.stringify(cart), (err) =>{
+                console.log(err);
+            })
+            
+        })
+        
+    }
+}
+```
+
+
+### Edit a product
+
+### Query Pramas
+
+### Prepopulate the form
+```js
+exports.getEditProduct = (req, res, next) => {
+  const editMode = req.query.edit;
+
+  Product.findById(prodId(prodId, product =>{
+    res.render('admin/edit-product/', {
+      pageTitle: 'Edit Product',
+      path: '/admin/add-product',
+      editing: editMode,
+      product: product
+    });
+  }))
+};
+```
+
+Inside the html
+```html
+<!-- IF edit mode, prepopulate the value -->
+<input value="<% if (editing) { %><%= product.title %><%= } %>"/>
+```
+
+
+## SQL introduction
+
+### Sql or NoSql ?
+
+***Sql***
+- SQL databases let you make relations between tables
+- Strong data Schema
+
+
+![alt text](imgs/sql.png "SQL")
+
+***NoSql***
+- Schemaless
+- No relation between table -> duplicate data but you can access the data in one command without making a call to another table first (you can actually use a trick to link documents but it's slower)
+
+![alt text](imgs/nosql1.png "SQL")
+![alt text](imgs/nosql2.png "SQL")
+
+#### Horizontal vs vertical scaling
+
+- Horizontal means that you add different instances of the same db
+- Vertical means that you upgrade the cpu/hardware/capacity of server (limited)
+
+-> Horizontal scaling is hard in SQL
+-> Horizontal scaling is easier in NoSQL
+
+SQL is still a better choice if we need strong relation between table & strong schemas
+
+![alt text](imgs/sqlvsnosql.png "SQL")
