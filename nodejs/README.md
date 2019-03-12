@@ -578,7 +578,7 @@ module.exports = class Cart{
 
 ### Edit a product
 
-### Query Pramas
+### Query Params
 
 ### Prepopulate the form
 ```js
@@ -632,3 +632,166 @@ Inside the html
 SQL is still a better choice if we need strong relation between table & strong schemas
 
 ![alt text](imgs/sqlvsnosql.png "SQL")
+
+
+
+## NoSql
+In NoSql it is common practice to have duplicated data but sometimes, you will use references using id
+![alt text](imgs/nosqlrelation.png "SQL")
+
+
+
+## Working with NoSQL & Using MongoDB
+```
+npm install --save mongodb
+```
+
+***database.js***
+```js
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
+
+// Variable that will contain the db connection
+let _db;
+
+const mongoConnect = (callback) =>{
+    MongoClient.connect('url')
+    .then(res => { 
+        console.log('Connected');
+        _db = res.db();
+        callback();
+    })
+    .catch(err => { 
+        console.log(err);
+        throw err;
+    });
+};
+
+const getDb = () =>{
+    if(_db){
+        return _db;
+    }
+    throw 'No database found!';
+}
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb; 
+
+```
+***app.js***
+```js
+const mongoConnect = require('./util/database').mongoConnect;
+
+mongoConnect(() =>{
+    app.listen(3000);
+});
+```
+
+### Creating the database connection
+
+***models/product.js***
+```js
+const mongodb = require('mongodb');
+const getDb = require('../util/databse').getDb;
+
+class Product {
+    constructor(title, price, description, imageUrl){
+        this.title = title;
+        this.price = price;
+        this.decription = description;
+        this.imageUrl = imageUrl;
+    }
+
+    // Save a product
+    save(){
+        // check if connected
+        const db = getDb();
+        return db.collection('products').insertOne(this)
+        .then()
+
+        .catch();
+    }
+
+    // Fetch all
+    static fetchAll(){
+        const db = getDb();
+        // use toArray only if there's only a couple hundreds documents, otherwise, we will need a pagination that make another call
+        return db
+        .collection('products')
+        .find()
+        .toArray()
+        .then(products =>{
+            return products;
+        })
+        .catch(err =>{
+            console.log(err);
+        });
+    }
+
+    // Fetch one
+    static findById(prodId){
+        const db = getDb();
+        return db
+            .collection('products')
+            // we need to use the mongodb object id to retrieve our object because the mongodb id's are handled differently
+            .find({_id: new mongoDb.ObjectId(prodId)})
+            .next()
+            .then(product =>{
+                return product;
+            })
+            .catch(err=>{
+                console.log(err)
+            });
+    }
+}
+```
+
+***admin.controller.js***
+```js
+exports.postAddProduct = (req, res, next) =>{
+    const title = req.body.title;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const description = req.body.description;
+    const product = new Product(title, price, description, imageUrl);
+
+    product.save()
+    .then(res =>{
+
+    })
+    .catch(err =>{
+
+    })
+}
+```
+
+
+***shop.controller.js***
+```js
+exports.getProducts = (req, res, next) =>{
+    Product.fetchAll()
+        .then(products =>{
+            res.render('shop/product-list', {
+                prods: products,
+                pageTitle: 'All Products',
+                path: '/products'
+            })
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+}
+export.getProduct = (req, res, next) =>{
+    Product.findById(prodId)
+    .then(product =>{
+        res.render('shop/product-detail', {
+            product: product,
+            pageTitle: product.title,
+            path: '/product'
+        });
+    })
+    .catch(err => console.log(err));
+}
+```
+### MongoDB compass
+GUI for the db 
