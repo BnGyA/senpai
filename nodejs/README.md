@@ -781,7 +781,7 @@ exports.getProducts = (req, res, next) =>{
             console.log(err)
         })
 }
-export.getProduct = (req, res, next) =>{
+exports.getProduct = (req, res, next) =>{
     Product.findById(prodId)
     .then(product =>{
         res.render('shop/product-detail', {
@@ -795,3 +795,9 @@ export.getProduct = (req, res, next) =>{
 ```
 ### MongoDB compass
 GUI for the db 
+
+
+
+## REST API
+
+### The basics
