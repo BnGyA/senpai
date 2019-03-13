@@ -16,4 +16,19 @@ router.post('/post', [
     body('title').trim().isLength({min: 5}),
     body('content').trim().isLength({min: 5}), 
 ], feedController.createPost);
+
+// Get
+
+router.get('/post/:postId', feedController.getPost);
+
+// PUT
+router.put('/post/:postId', feedController.updatePost, [
+    // validation
+    body('title').trim().isLength({min: 5}),
+    body('content').trim().isLength({min: 5}), 
+]);
+
+// DELETE
+router.delete('/post/:postId', feedController.deletePost)
+
 module.exports = router;
