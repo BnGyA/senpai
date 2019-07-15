@@ -16,6 +16,11 @@ void main(){
 4. The float type on the precision is crucial. The higher, the heavier for the GPU & the nicer look.
 
 
+## Uniforms
+
+Valeurs passées par la CPU au GPU utilisées en lecture seules, tous les threads reçoivent les mêmes données, chacun peut les lire mais pas les modifier
+Les uniforms se définissent généralement en haut du shader, juste après avoir défini la précision des floats (et autres macros de prétraitement).
+Il est courant de préfixer ces variables par u_ (u_mouse, u_resolution, u_time)
 
 
 
