@@ -1,0 +1,110 @@
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+
+:root {
+	font-size: 16px;
+}
+
+body {
+	margin: 0;
+	--color-text: #1c1b1b;
+	--color-bg: #efe6e1;
+	--color-link: #b07656;
+	--color-link-hover: #000;
+	--color-deco: #e4dbd6;
+	color: var(--color-text);
+	background-color: var(--color-bg);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	align-items: center;
+	padding: 12rem 0;
+	counter-reset: figure; 
+}
+
+.item {
+	margin: 10vh auto;
+	max-width: 100%;
+	position: relative;
+	will-change: transform;
+}
+
+.item::before {
+	counter-increment: figure;
+	content: counter(figure, decimal-leading-zero);
+	position: absolute;
+	font-family: paralucent, sans-serif;
+	font-size: 10rem;
+	color: var(--color-deco);
+	bottom: calc(100% - 3rem);
+}
+
+.item:nth-child(even)::before {
+	right: 0;
+}
+
+.item__img-wrap{
+    /* https://css-tricks.com/aspect-ratio-boxes/ */
+    --aspect-ratio: 1/1.5;
+    overflow: hidden;
+    width: 500px;
+    margin: 0 auto;
+    padding-bottom: calc(100%/(var(--aspect-ratio)));
+    max-width: calc(100% - 2rem);
+    will-change: transform;
+}
+
+
+.item:first-child .item__img-wrap {
+	--aspect-ratio: 8/10;
+	--image: url(img/cirque.jpg);
+}
+
+
+.item__img{
+    --overflow: 40px;
+    height: calc(100% + (2*var(--overflow)));
+    top: calc(-1 * var(--overflow));
+    width: 100%;
+    position: absolute;
+    background-image: var(--image);
+    background-size: cover;
+    background-position: 50% 0;
+    will-change: transform;
+}
+
+.item__img--t1 {
+	--overflow: 60px;
+}
+
+
+.item__caption {
+	padding: 2rem 1rem;
+}
+
+.item__caption-title {
+	font-family: paralucent, sans-serif;
+	font-weight: 400;
+	font-size: 3rem;
+	margin: 0;
+}
+
+.item__caption-copy {
+	margin: 0;
+}
+
+.item__caption-copy::before {
+	content: '__';
+	line-height: 1;
+	color: var(--color-link);
+	font-weight: 700;
+	font-size: 3rem;
+	margin: 0 0 1rem;
+	display: block;
+}
