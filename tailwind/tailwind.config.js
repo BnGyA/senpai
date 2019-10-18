@@ -1,7 +1,16 @@
 module.exports = {
   theme: {
-    extend: {}
+    extend: {
+      borderWidth: {
+        '1': '1px'
+      },
+      borderRadius: {
+        'md': '.250rem'
+      }
+    }
   },
-  variants: {},
+  variants: {
+    textColor: ['focus', 'hover', 'active']
+  },
   plugins: []
 }
