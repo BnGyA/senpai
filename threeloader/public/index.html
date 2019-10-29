@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js"></script>
+    <script src="three-loader/OBJLoader.js"></script>
+    <script src="three-loader/MTLLoader.js"></script>
+    <script src="three-loader/orbitControl.js"></script>
+</head>
+<body>
+    HELLO
+
+
+    <script>
+        var renderer = new THREE.WebGLRenderer( { alpha: true } );
+        renderer.setClearColor( 0x000000, 0 ); // the default
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+        camera.position.z = .3;
+        controls.update();
+
+
+    
+        const scene = new THREE.Scene();
+
+        const light = new THREE.DirectionalLight('#ffffff', 0.9);
+        light.position.set(-20, 0, 100);
+        scene.add(light);
+
+
+        const lightAmbiant = new THREE.AmbientLight( 0x404040 ); // soft white light
+        scene.add( lightAmbiant );
+        
+
+       
+        
+
+        
+
+        
+
+        const objLoader = new THREE.OBJLoader();
+        objLoader.setPath('/blender-files/');
+
+        const mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('/blender-files/');
+
+
+        new Promise((res) =>{
+            mtlLoader.load('donut.mtl', (mat) =>{
+                res(mat);
+            })
+        })
+        .then((mat) =>{
+            mat.preload();
+            objLoader.setMaterials(mat);
+            objLoader.load('donut.obj', (object) =>{
+                
+                scene.add(object);
+
+                var yolo = (object.children[0]);
+                //yolo.rotation.x = 1;
+                object.rotation.x = 1;
+                console.log(yolo);
+                render();
+            })
+        })
+        
+        function render(){
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+            controls.update();
+            scene.children[2].rotation.y += .01;
+        }
+
+        
+
+        
+    </script>
+</body>
+</html>

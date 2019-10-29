@@ -7,9 +7,8 @@ RUN apk update && \
 
 
 RUN git clone https://github.com/BenjaminRochez/styleguider.git /opt/styleguider
-RUN cd /opt/styleguider && hugo
+RUN cd /opt/styleguider && hugo 
 
 FROM nginx:alpine as base
 
 COPY --from=builder /opt/styleguider/public/. /usr/share/nginx/html
-
