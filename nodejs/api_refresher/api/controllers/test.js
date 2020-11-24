@@ -49,7 +49,7 @@ exports.callWatson = (req, re, next) =>{
 
     assistant.message({
         assistantId: process.env.IBM_ASSISTANT,
-        sessionId: 'dbe9cb46-b912-4569-b0ed-213b53ca06ee',
+        sessionId: 'adf945d7-595c-40e8-b45b-5151ced2ec16',
         input: {
             'message_type': 'text',
             'text': req.body.data.question

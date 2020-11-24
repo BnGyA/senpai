@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js"></script>
+    
+    <script src="three-loader/GLTFLoader.js"></script>
+    <script src="three-loader/stats.js"></script>
+    <script src="three-loader/orbitControl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+</head>
+<body>
+    HELLO
+    
+    
+    <script>
+        var API = {
+            color: 0xffff00,
+            exposure: 1.0
+        };
+        var renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true  } );
+        renderer.shadowMap.enabled = true;
+        renderer.setClearColor( 0x000000, 0 ); // the default
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // tone mapping
+        renderer.toneMapping = THREE.LinearToneMapping;
+        renderer.gammaOutput = true;
+        
+        
+        document.body.appendChild(renderer.domElement);
+        
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        
+        camera.position.z = 5;
+        camera.position.y = 5;
+        camera.position.x = 5;
+        controls.update();
+        
+        
+        
+        const scene = new THREE.Scene();
+        
+        var light = new THREE.DirectionalLight('#ffffff', 0.9);
+        light.position.set(0, 10, 10);
+        light.castShadow = true;
+        
+        scene.add(light);
+        
+        var hemisphereLight = new THREE.HemisphereLight( 0x0000ff, 0x080820, 1 );
+        scene.add(hemisphereLight);
+        
+        const lightAmbiant = new THREE.AmbientLight( 0x404040 ); // soft white light
+        scene.add( lightAmbiant );
+        
+        var gui = new dat.GUI();
+        
+        var lightPos = gui.addFolder('Ligth');
+        lightPos.add(light.position,  'x', -20, 100).name('X pos').listen();
+        lightPos.add(light.position,  'y', -20, 100).name('Y pos').listen();
+        lightPos.add(light.position,  'z', -20, 100).name('Z pos').listen();
+        lightPos.add(light.rotation,  'x', 0, 360).name('X ro').listen();
+        lightPos.add(light.rotation,  'y', 0, 360).name('Y ro').listen();
+        lightPos.add(light.rotation,  'z', 0, 360).name('Z ro').listen();
+        lightPos.open();
+        
+        var mesh;
+        
+        var helper = new THREE.DirectionalLightHelper( light, 5, '#ff0000' );
+        
+        scene.add( helper );
+        
+        
+        // manager
+        var manager = new THREE.LoadingManager( renderer );
+        // matcap
+        var loader = new THREE.TextureLoader( manager );
+        var matcap = loader.load( './blender-files/matcap-porcelain-white.jpg', function () {
+            matcap.encoding = THREE.sRGBEncoding;
+        } );
+        
+        const gltfLoader = new THREE.GLTFLoader(manager);
+        const url = './blender-files/tower_crane.gltf';
+        
+        gltfLoader.load(url, (gltf) => {
+            mesh = gltf.scene.children[ 0 ];
+            mesh.material = new THREE.MeshMatcapMaterial( {
+                color: API.color,
+                matcap: matcap
+            } );
+            scene.add( mesh );
+        });
+        
+        function render(){
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+            controls.update();
+            //scene.children[2].rotation.y += .01;
+        }
+        
+        
+        
+        
+    </script>-->
+    
+</body>
+</html>
